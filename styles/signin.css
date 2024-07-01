@@ -1,0 +1,277 @@
+:root {
+  --clr-primary: #181818;
+  --clr-complementary: #07c297;
+  --clr-accent: #2b2b2b;
+  --ff-base: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--clr-primary);
+  color: #fff;
+  font-family: var(--ff-base);
+  font-weight: 300;
+  height: 100vh;
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 300;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+#left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sign in */
+#signin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  padding-bottom: 1rem;
+}
+
+#signin form {
+  width: 80%;
+  padding-bottom: 3rem;
+}
+
+#signin .logo {
+  margin-bottom: 8vh;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#signin .logo>i {
+  font-size: 2rem;
+  color: var(--clr-complementary);
+
+}
+
+#signin .logo>h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+#signin label {
+  font: 0.9rem;
+  line-height: 2rem;
+  font-weight: 500;
+  display: block
+}
+
+#signin .text-input {
+  margin-bottom: 1.3rem;
+  width: 100%;
+  height: 2.7rem;
+  border: 1px #666 solid;
+  border-radius: 2px;
+  background-color: #181818;
+  color: #ccc;
+  padding: 0.5rem 1rem;
+}
+
+#signin .text-input:focus {
+  outline: 1px var(--clr-complementary) solid;
+}
+
+#signin .primary-btn {
+  width: 100%;
+}
+
+#signin .secondary-btn,
+.or,
+.links {
+  width: 60%;
+}
+
+#signin .links a {
+  display: block;
+  color: var(--clr-complementary);
+  margin-bottom: 1rem;
+  align-items: center;
+  text-decoration: none;
+  text-align: center;
+  font-size: 0.9rem;
+  transition: all 0.5s ease;
+}
+
+#signin .links a:hover {
+  text-decoration: underline;
+}
+
+#signin .or {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+#signin .or .bar {
+  flex: auto;
+  border: none;
+  height: 1px;
+  background: var(--clr-accent);
+}
+
+#signin .or span {
+  color: var(--clr-accent);
+  padding: 0 0.8rem;
+}
+
+#showcase {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url(../assets/images/daniel-olah-eoMCWbRkRs4-unsplash.jpg) no-repeat center;
+  height: 100vh;
+  text-align: center;
+}
+
+#showcase .showcase-text {
+  font-size: 3rem;
+  font-weight: 700;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  padding: 2rem;
+}
+
+#showcase .secondary-btn {
+  width: 37%;
+  margin: auto;
+  background: var(--clr-complementary);
+}
+
+#showcase .secondary-btn:hover {
+  color: var(--clr-accent);
+  opacity: 1;
+}
+
+#main-footer {
+  color: #666;
+  text-align: center;
+  font-size: 0.7rem;
+  max-width: 80%;
+  padding-top: 4rem;
+}
+
+#main-footer p {
+  margin-bottom: 0.5rem;
+}
+
+#main-footer a {
+  color: #fff;
+  text-decoration: none;
+}
+
+#main-footer a:hover {
+  text-decoration: underline;
+}
+
+.primary-btn {
+  display: block;
+  padding: 0.7rem 1rem;
+  height: 2.7rem;
+  border: none;
+  border-radius: 2px;
+  font-family: var(--ff-base);
+  font-weight: 500;
+  background: var(--clr-complementary);
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.primary-btn:hover {
+  opacity: 0.7;
+}
+
+.primary-btn:active {
+  opacity: 0.3;
+}
+
+.secondary-btn {
+  padding: 0.7rem 1rem;
+  height: 2.7rem;
+  display: block;
+  border: none;
+  border-radius: 2px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: var(--clr-accent);
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.secondary-btn:hover {
+  opacity: 0.7;
+}
+
+.secondary-btn:active {
+  opacity: 0.3;
+}
+
+@media(min-width: 1200px) {
+  #left {
+    flex: 4;
+  }
+
+  #right {
+    flex: 6;
+  }
+}
+
+@media(max-width:900px) {
+  body {
+    overflow: auto;
+  }
+
+  #right {
+    display: none;
+  }
+
+  #left {
+    justify-content: start;
+    margin-top: 10vh;
+  }
+
+  #signin .logo {
+    margin-bottom: 2vh;
+  }
+
+  #signin .text-input {
+    margin-bottom: 0.7rem;
+  }
+
+  #main-footer {
+    padding-top: 1rem;
+  }
+}

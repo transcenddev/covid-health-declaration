@@ -1,0 +1,141 @@
+:root {
+  --clr-primary: #181818;
+  --clr-complementary: #07c297;
+  --clr-accent: #333;
+  --clr-danger: hsl(354, 61%, 57%);
+  --clr-sucess: hsl(133, 61%, 33%);
+
+  --ff-base: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--clr-primary);
+  color: #fff;
+  font-family: var(--ff-base);
+  font-weight: 300;
+  margin: 0;
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 300;
+}
+
+.signup-error,
+.signup-success {
+  font-size: .9rem;
+  font-weight: 400;
+}
+
+.signup-success {
+  color: var(--clr-complementary);
+}
+
+.signup-error {
+  color: var(--clr-danger);
+}
+
+
+/* Sign in */
+#signin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-inline: auto;
+  width: min(400px, 100% - 3rem);
+  height: 100vh;
+  padding-bottom: 1rem;
+}
+
+#signin form {
+  width: 80%;
+  padding-bottom: 3rem;
+}
+
+#signin .logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#signin .logo>i {
+  font-size: 2rem;
+  color: var(--clr-complementary);
+}
+
+#signin .logo>h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+#signin label {
+  font: 0.9rem;
+  line-height: 2rem;
+  font-weight: 500;
+  display: block
+}
+
+#signin .text-input {
+  margin-bottom: 1.3rem;
+  width: 100%;
+  height: 2.7rem;
+  border: 1px #666 solid;
+  border-radius: 2px;
+  background-color: #181818;
+  color: #ccc;
+  padding: 0.5rem 1rem;
+}
+
+#signin .text-input:focus {
+  outline: 1px var(--clr-complementary) solid;
+}
+
+#signin .primary-btn {
+  width: 100%;
+}
+
+.primary-btn {
+  display: block;
+  padding: 0.7rem 1rem;
+  height: 2.7rem;
+  border: none;
+  border-radius: 2px;
+  font-family: var(--ff-base);
+  font-weight: 400;
+  background: var(--clr-complementary);
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.primary-btn:hover {
+  opacity: 0.7;
+}
+
+#signin .links a {
+  display: block;
+  color: var(--clr-complementary);
+  margin-top: 1rem;
+  align-items: center;
+  text-decoration: none;
+  text-align: center;
+  font-size: 0.9rem;
+  transition: all 0.5s ease;
+}
+
+#signin .links a:hover {
+  text-decoration: underline;
+}

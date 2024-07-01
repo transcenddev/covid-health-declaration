@@ -1,0 +1,66 @@
+:root {
+  --clr-primary: #181818;
+  --clr-complementary: #07c297;
+  --clr-accent: #474747;
+  --ff-base: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark !important;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--clr-primary) !important;
+  color: white !important;
+  font-family: var(--ff-base) !important;
+  line-height: 1.5;
+  padding: 120px 0;
+  margin: 0;
+
+}
+
+.wrapper-form {
+  display: grid;
+  place-items: center;
+}
+
+.btn.btn-primary {
+  background-color: var(--clr-complementary) !important;
+  outline: none;
+  border: none;
+}
+
+.form-check-input:checked {
+  background-color: var(--clr-complementary) !important;
+  outline: none;
+  border: none;
+}
+
+select,
+input {
+  background-color: var(--clr-primary) !important;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+select,
+.form-select {
+  color: white !important;
+  border: 1px solid var(--clr-accent) !important;
+}
+
+#emailHelp {
+  color: var(--clr-accent);
+  font-size: small !;
+}
+
+.add-title {
+  display: flex !important;
+  gap: 1rem;
+}

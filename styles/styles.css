@@ -1,0 +1,58 @@
+:root {
+  --clr-primary: #181818;
+  --clr-complementary: #07c297;
+  --clr-accent: #212121;
+  --ff-base: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+a,
+span {
+  font-size: 1rem;
+  font-weight: 400;
+  color: white;
+}
+
+h2 {
+  font-size: 2rem;
+  padding: 1rem;
+}
+
+a {
+  text-decoration: none;
+}
+
+body {
+  background-color: black;
+  color: white;
+  font-family: var(--ff-base);
+  /* line-height: 1.5;
+  height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center; */
+}
+
+.wrapper-main h1 {
+  font-family: var(--ff-base);
+  font-size: 3vw;
+  font-weight: 600;
+}

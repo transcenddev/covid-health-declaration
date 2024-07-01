@@ -1,0 +1,49 @@
+#navbar {
+  z-index: 999;
+  display: flex;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  font-family: "Inter";
+  font-weight: 100;
+
+}
+
+.navbar>.nav-section {
+  padding: 2rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+}
+
+#nav-logo-section {
+  justify-content: flex-start;
+  flex-grow: 1;
+}
+
+.nav-section>a {
+  font-size: 0.7rem;
+  transition: all 300ms ease;
+  text-decoration: none;
+  color: white;
+}
+
+.nav-section>a:hover {
+  opacity: 0.5;
+}
+
+#nav-logo-section>a>i {
+  font-size: 2rem;
+}
+
+#nav-link-section {
+  gap: 4rem;
+}
+
+@media (max-width: 40rem) {
+  #nav-social-section {
+    display: none;
+  }
+}
