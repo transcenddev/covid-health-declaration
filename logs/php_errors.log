@@ -1,0 +1,526 @@
+[19-Sep-2025 10:50:53 Europe/Berlin] Database connection successful
+[19-Sep-2025 10:50:53 Europe/Berlin] === POST REQUEST RECEIVED ===
+[19-Sep-2025 10:50:53 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => e0c03f7558c07d45c87a295864c5153d90af53917a15df8765bdfb28fcbc5443
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36.0
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[19-Sep-2025 10:50:53 Europe/Berlin] Form submit button exists: NO
+[19-Sep-2025 10:51:33 Europe/Berlin] Database connection successful
+[19-Sep-2025 10:51:33 Europe/Berlin] === POST REQUEST RECEIVED ===
+[19-Sep-2025 10:51:33 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => e0c03f7558c07d45c87a295864c5153d90af53917a15df8765bdfb28fcbc5443
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36.0
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[19-Sep-2025 10:51:33 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 10:47:46 Europe/Berlin] Database connection successful
+[21-Sep-2025 10:48:15 Europe/Berlin] Database connection successful
+[21-Sep-2025 10:48:15 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 10:48:15 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Reymar Victoriano Mirante
+    [gender] => Female
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 10:48:15 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 10:48:27 Europe/Berlin] Database connection successful
+[21-Sep-2025 10:48:27 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 10:48:27 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Reymar Victoriano Mirante
+    [gender] => Female
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 10:48:27 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:01:33 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:01:33 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:01:33 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:01:33 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:08:51 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:08:51 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:08:51 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:08:51 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:09:09 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:09:09 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:09:09 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:09:09 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:10:02 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:10:02 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:10:02 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:10:02 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:13:31 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:13:31 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:13:31 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:13:31 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:13:36 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:13:36 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:13:36 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:13:36 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:13:47 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:13:47 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:13:47 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:13:47 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:13:57 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:13:58 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:13:58 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:13:58 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:14:04 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:14:04 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:14:04 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:14:04 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:20:29 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:20:29 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:20:29 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Filipino
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:20:29 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:23:22 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:24:07 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:24:43 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:24:43 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:24:43 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Philippines
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:24:43 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:24:43 Europe/Berlin] Submit button value: NOT SET
+[21-Sep-2025 11:24:43 Europe/Berlin] === FORM SUBMISSION STARTED ===
+[21-Sep-2025 11:24:43 Europe/Berlin] PHP Warning:  Undefined array key "submit" in C:\xampp\htdocs\covid-health-declaration\add.php on line 42
+[21-Sep-2025 11:24:43 Europe/Berlin] Submit button detected: 
+[21-Sep-2025 11:24:43 Europe/Berlin] CSRF validation passed
+[21-Sep-2025 11:24:43 Europe/Berlin] === FORM DATA RECEIVED ===
+[21-Sep-2025 11:24:43 Europe/Berlin] Email: 'mhayvictoriano@gmail.com'
+[21-Sep-2025 11:24:43 Europe/Berlin] Full Name: 'Rosemarie Visitacion Victoriano'
+[21-Sep-2025 11:24:43 Europe/Berlin] Gender: 'Male'
+[21-Sep-2025 11:24:43 Europe/Berlin] Age: '48' (type: integer)
+[21-Sep-2025 11:24:43 Europe/Berlin] Temperature: '36' (type: double)
+[21-Sep-2025 11:24:43 Europe/Berlin] Diagnosed: 'No'
+[21-Sep-2025 11:24:43 Europe/Berlin] Encounter: 'No'
+[21-Sep-2025 11:24:43 Europe/Berlin] Vaccinated: 'Yes'
+[21-Sep-2025 11:24:43 Europe/Berlin] Nationality: 'Philippines'
+[21-Sep-2025 11:24:43 Europe/Berlin] === ALL VALIDATIONS PASSED ===
+[21-Sep-2025 11:24:43 Europe/Berlin] Attempting database insert...
+[21-Sep-2025 11:24:43 Europe/Berlin] Converted ENUM values - Diagnosed: 'NO', Encounter: 'NO', Vaccinated: 'YES'
+[21-Sep-2025 11:24:43 Europe/Berlin] Database connection is alive
+[21-Sep-2025 11:24:43 Europe/Berlin] SQL Query: INSERT INTO records (email, full_name, gender, age, temp, diagnosed, encountered, vaccinated, nationality) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+[21-Sep-2025 11:24:43 Europe/Berlin] Prepared statement created successfully
+[21-Sep-2025 11:24:43 Europe/Berlin] Parameters bound successfully
+[21-Sep-2025 11:24:43 Europe/Berlin] Final values to insert:
+[21-Sep-2025 11:24:43 Europe/Berlin]   email='mhayvictoriano@gmail.com', full_name='Rosemarie Visitacion Victoriano', gender='Male'
+[21-Sep-2025 11:24:43 Europe/Berlin]   age=48, temp=36
+[21-Sep-2025 11:24:43 Europe/Berlin]   diagnosed='NO', encountered='NO', vaccinated='YES'
+[21-Sep-2025 11:24:43 Europe/Berlin]   nationality='Philippines'
+[21-Sep-2025 11:24:44 Europe/Berlin] === DATABASE INSERT SUCCESSFUL ===
+[21-Sep-2025 11:24:44 Europe/Berlin] New record ID: 27
+[21-Sep-2025 11:24:44 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\covid-health-declaration\header.php:121) in C:\xampp\htdocs\covid-health-declaration\add.php on line 185
+[21-Sep-2025 11:24:44 Europe/Berlin] === FORM SUBMISSION ENDED ===
+[21-Sep-2025 11:26:17 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:26:17 Europe/Berlin] === POST REQUEST RECEIVED ===
+[21-Sep-2025 11:26:17 Europe/Berlin] POST data: Array
+(
+    [csrf_token] => 2544fbd6dd78eac44eea37e02527a1e0a913bb21ef1c00130c5bf413be57e85f
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Visitacion Victoriano
+    [gender] => Male
+    [age] => 48
+    [nationality] => Philippines
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[21-Sep-2025 11:26:17 Europe/Berlin] Form submit button exists: NO
+[21-Sep-2025 11:26:17 Europe/Berlin] Submit button value: NOT SET
+[21-Sep-2025 11:26:17 Europe/Berlin] === FORM SUBMISSION STARTED ===
+[21-Sep-2025 11:26:17 Europe/Berlin] Submit button detected: NOT SET
+[21-Sep-2025 11:26:17 Europe/Berlin] CSRF validation passed
+[21-Sep-2025 11:26:17 Europe/Berlin] === FORM DATA RECEIVED ===
+[21-Sep-2025 11:26:17 Europe/Berlin] Email: 'mhayvictoriano@gmail.com'
+[21-Sep-2025 11:26:17 Europe/Berlin] Full Name: 'Rosemarie Visitacion Victoriano'
+[21-Sep-2025 11:26:17 Europe/Berlin] Gender: 'Male'
+[21-Sep-2025 11:26:17 Europe/Berlin] Age: '48' (type: integer)
+[21-Sep-2025 11:26:17 Europe/Berlin] Temperature: '36' (type: double)
+[21-Sep-2025 11:26:17 Europe/Berlin] Diagnosed: 'No'
+[21-Sep-2025 11:26:17 Europe/Berlin] Encounter: 'No'
+[21-Sep-2025 11:26:17 Europe/Berlin] Vaccinated: 'Yes'
+[21-Sep-2025 11:26:17 Europe/Berlin] Nationality: 'Philippines'
+[21-Sep-2025 11:26:17 Europe/Berlin] === BASIC VALIDATION PASSED ===
+[21-Sep-2025 11:26:17 Europe/Berlin] Attempting database insert...
+[21-Sep-2025 11:26:17 Europe/Berlin] Converted ENUM values - Diagnosed: 'NO', Encounter: 'NO', Vaccinated: 'YES'
+[21-Sep-2025 11:26:17 Europe/Berlin] SQL Query: INSERT INTO records (email, full_name, gender, age, temp, diagnosed, encountered, vaccinated, nationality) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+[21-Sep-2025 11:26:17 Europe/Berlin] Prepared statement created successfully
+[21-Sep-2025 11:26:17 Europe/Berlin] Parameters bound successfully
+[21-Sep-2025 11:26:17 Europe/Berlin] Final values to insert:
+[21-Sep-2025 11:26:17 Europe/Berlin]   email='mhayvictoriano@gmail.com', full_name='Rosemarie Visitacion Victoriano', gender='Male'
+[21-Sep-2025 11:26:17 Europe/Berlin]   age=48, temp=36
+[21-Sep-2025 11:26:17 Europe/Berlin]   diagnosed='NO', encountered='NO', vaccinated='YES'
+[21-Sep-2025 11:26:17 Europe/Berlin]   nationality='Philippines'
+[21-Sep-2025 11:26:17 Europe/Berlin] === DATABASE INSERT SUCCESSFUL ===
+[21-Sep-2025 11:26:17 Europe/Berlin] New record ID: 29
+[21-Sep-2025 11:26:17 Europe/Berlin] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\covid-health-declaration\header.php:121) in C:\xampp\htdocs\covid-health-declaration\add.php on line 118
+[21-Sep-2025 11:26:17 Europe/Berlin] === FORM SUBMISSION ENDED ===
+[21-Sep-2025 11:26:50 Europe/Berlin] Database connection successful
+[21-Sep-2025 11:33:09 Europe/Berlin] Database connection successful
+[21-Sep-2025 12:04:27 Europe/Berlin] Database connection successful
+[21-Sep-2025 12:40:35 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:17:40 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:21:21 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:23:26 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:31:52 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:32:41 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:33:18 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:37:33 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:38:10 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:39:04 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:39:14 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:39:18 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:39:24 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:39:31 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:39:50 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:43:08 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:43:18 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:43:58 Europe/Berlin] Database connection successful
+[25-Sep-2025 05:45:05 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:04:09 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:04:29 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:08:13 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:11:11 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:14:23 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:16:08 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:18:41 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:20:09 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:27:28 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:28:06 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:32:06 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:32:53 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:34:34 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:35:12 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:40:43 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:43:02 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:43:34 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:44:50 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:45:49 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:47:20 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:48:12 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:49:04 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:57:33 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:57:33 Europe/Berlin] POST request detected!
+[25-Sep-2025 07:57:33 Europe/Berlin] No submit button in POST data
+[25-Sep-2025 07:57:33 Europe/Berlin] Available POST keys: csrf_token, email, full_name, gender, age, nationality, temp, diagnosed, encounter, vaccinated
+[25-Sep-2025 07:58:39 Europe/Berlin] Database connection successful
+[25-Sep-2025 07:58:39 Europe/Berlin] POST request detected!
+[25-Sep-2025 07:58:39 Europe/Berlin] No submit button in POST data
+[25-Sep-2025 07:58:39 Europe/Berlin] Available POST keys: csrf_token, email, full_name, gender, age, nationality, temp, diagnosed, encounter, vaccinated
+[25-Sep-2025 08:11:53 Europe/Berlin] Database connection successful
+[25-Sep-2025 08:11:53 Europe/Berlin] POST request detected!
+[25-Sep-2025 08:11:53 Europe/Berlin] No submit button in POST data
+[25-Sep-2025 08:11:53 Europe/Berlin] Available POST keys: csrf_token, email, full_name, gender, age, nationality, temp, diagnosed, encounter, vaccinated
+[25-Sep-2025 08:11:53 Europe/Berlin] === FORM SUBMISSION STARTED ===
+[25-Sep-2025 08:11:53 Europe/Berlin] POST data received: Array
+(
+    [csrf_token] => b3c01dd159a66794701ceeb9e71b30fa1d41d5228ea215681bba40803fc1f80b
+    [email] => mhayvictoriano@gmail.com
+    [full_name] => Rosemarie Victoriano
+    [gender] => Female
+    [age] => 46
+    [nationality] => Filipino 
+    [temp] => 36
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[25-Sep-2025 08:11:53 Europe/Berlin] Health form detected - proceeding with processing
+[25-Sep-2025 08:11:53 Europe/Berlin] CSRF validation passed
+[25-Sep-2025 08:11:53 Europe/Berlin] === FORM DATA RECEIVED ===
+[25-Sep-2025 08:11:53 Europe/Berlin] Email: 'mhayvictoriano@gmail.com'
+[25-Sep-2025 08:11:53 Europe/Berlin] Full Name: 'Rosemarie Victoriano'
+[25-Sep-2025 08:11:53 Europe/Berlin] Gender: 'Female'
+[25-Sep-2025 08:11:53 Europe/Berlin] Age: '46' (type: integer)
+[25-Sep-2025 08:11:53 Europe/Berlin] Temperature: '36' (type: double)
+[25-Sep-2025 08:11:53 Europe/Berlin] Diagnosed: 'No'
+[25-Sep-2025 08:11:53 Europe/Berlin] Encounter: 'No'
+[25-Sep-2025 08:11:53 Europe/Berlin] Vaccinated: 'Yes'
+[25-Sep-2025 08:11:53 Europe/Berlin] Nationality: 'Filipino'
+[25-Sep-2025 08:11:53 Europe/Berlin] === BASIC VALIDATION PASSED ===
+[25-Sep-2025 08:11:53 Europe/Berlin] Attempting database insert...
+[25-Sep-2025 08:11:53 Europe/Berlin] Converted ENUM values - Diagnosed: 'NO', Encounter: 'NO', Vaccinated: 'YES'
+[25-Sep-2025 08:11:53 Europe/Berlin] SQL Query: INSERT INTO records (email, full_name, gender, age, temp, diagnosed, encountered, vaccinated, nationality) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+[25-Sep-2025 08:11:53 Europe/Berlin] Prepared statement created successfully
+[25-Sep-2025 08:11:53 Europe/Berlin] Parameters bound successfully
+[25-Sep-2025 08:11:53 Europe/Berlin] Final values to insert:
+[25-Sep-2025 08:11:53 Europe/Berlin]   email='mhayvictoriano@gmail.com', full_name='Rosemarie Victoriano', gender='Female'
+[25-Sep-2025 08:11:53 Europe/Berlin]   age=46, temp=36
+[25-Sep-2025 08:11:53 Europe/Berlin]   diagnosed='NO', encountered='NO', vaccinated='YES'
+[25-Sep-2025 08:11:53 Europe/Berlin]   nationality='Filipino'
+[25-Sep-2025 08:11:53 Europe/Berlin] === DATABASE INSERT SUCCESSFUL ===
+[25-Sep-2025 08:11:53 Europe/Berlin] New record ID: 30
+[25-Sep-2025 08:11:53 Europe/Berlin] === FORM SUBMISSION ENDED ===
+[25-Sep-2025 08:32:56 Europe/Berlin] Database connection successful
+[25-Sep-2025 08:34:46 Europe/Berlin] Database connection successful
+[25-Sep-2025 08:34:46 Europe/Berlin] POST request detected!
+[25-Sep-2025 08:34:46 Europe/Berlin] No submit button in POST data
+[25-Sep-2025 08:34:46 Europe/Berlin] Available POST keys: csrf_token, email, full_name, gender, age, nationality, temp, diagnosed, encounter, vaccinated
+[25-Sep-2025 08:34:46 Europe/Berlin] === FORM SUBMISSION STARTED ===
+[25-Sep-2025 08:34:46 Europe/Berlin] POST data received: Array
+(
+    [csrf_token] => b3c01dd159a66794701ceeb9e71b30fa1d41d5228ea215681bba40803fc1f80b
+    [email] => mary.nolan634@vaupk.org
+    [full_name] => Mary Nolan
+    [gender] => Female
+    [age] => 34
+    [nationality] => Filipino 
+    [temp] => 36.5
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[25-Sep-2025 08:34:46 Europe/Berlin] Health form detected - proceeding with processing
+[25-Sep-2025 08:34:46 Europe/Berlin] CSRF validation passed
+[25-Sep-2025 08:34:46 Europe/Berlin] === FORM DATA RECEIVED ===
+[25-Sep-2025 08:34:46 Europe/Berlin] Email: 'mary.nolan634@vaupk.org'
+[25-Sep-2025 08:34:46 Europe/Berlin] Full Name: 'Mary Nolan'
+[25-Sep-2025 08:34:46 Europe/Berlin] Gender: 'Female'
+[25-Sep-2025 08:34:46 Europe/Berlin] Age: '34' (type: integer)
+[25-Sep-2025 08:34:46 Europe/Berlin] Temperature: '36.5' (type: double)
+[25-Sep-2025 08:34:46 Europe/Berlin] Diagnosed: 'No'
+[25-Sep-2025 08:34:46 Europe/Berlin] Encounter: 'No'
+[25-Sep-2025 08:34:46 Europe/Berlin] Vaccinated: 'Yes'
+[25-Sep-2025 08:34:46 Europe/Berlin] Nationality: 'Filipino'
+[25-Sep-2025 08:34:46 Europe/Berlin] === BASIC VALIDATION PASSED ===
+[25-Sep-2025 08:34:46 Europe/Berlin] Attempting database insert...
+[25-Sep-2025 08:34:46 Europe/Berlin] Converted ENUM values - Diagnosed: 'NO', Encounter: 'NO', Vaccinated: 'YES'
+[25-Sep-2025 08:34:46 Europe/Berlin] SQL Query: INSERT INTO records (email, full_name, gender, age, temp, diagnosed, encountered, vaccinated, nationality) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+[25-Sep-2025 08:34:46 Europe/Berlin] Prepared statement created successfully
+[25-Sep-2025 08:34:46 Europe/Berlin] Parameters bound successfully
+[25-Sep-2025 08:34:46 Europe/Berlin] Final values to insert:
+[25-Sep-2025 08:34:46 Europe/Berlin]   email='mary.nolan634@vaupk.org', full_name='Mary Nolan', gender='Female'
+[25-Sep-2025 08:34:46 Europe/Berlin]   age=34, temp=36.5
+[25-Sep-2025 08:34:46 Europe/Berlin]   diagnosed='NO', encountered='NO', vaccinated='YES'
+[25-Sep-2025 08:34:46 Europe/Berlin]   nationality='Filipino'
+[25-Sep-2025 08:34:46 Europe/Berlin] === DATABASE INSERT SUCCESSFUL ===
+[25-Sep-2025 08:34:46 Europe/Berlin] New record ID: 31
+[25-Sep-2025 08:34:46 Europe/Berlin] === FORM SUBMISSION ENDED ===
+[25-Sep-2025 08:47:45 Europe/Berlin] Database connection successful
+[26-Sep-2025 03:29:49 Europe/Berlin] Database connection successful
+[26-Sep-2025 03:31:41 Europe/Berlin] Database connection successful
+[26-Sep-2025 03:31:41 Europe/Berlin] POST request detected!
+[26-Sep-2025 03:31:41 Europe/Berlin] No submit button in POST data
+[26-Sep-2025 03:31:41 Europe/Berlin] Available POST keys: csrf_token, email, full_name, gender, age, nationality, temp, diagnosed, encounter, vaccinated
+[26-Sep-2025 03:31:41 Europe/Berlin] === FORM SUBMISSION STARTED ===
+[26-Sep-2025 03:31:41 Europe/Berlin] POST data received: Array
+(
+    [csrf_token] => f25fba8f80a9c820a406db97b58f3209eebc7efaacc2348b010e5911d81dfc14
+    [email] => mary.nolan634@vaupk.org
+    [full_name] => Mary Nolan
+    [gender] => Female
+    [age] => 34
+    [nationality] => Filipino 
+    [temp] => 36.5
+    [diagnosed] => No
+    [encounter] => No
+    [vaccinated] => Yes
+)
+
+[26-Sep-2025 03:31:41 Europe/Berlin] Health form detected - proceeding with processing
+[26-Sep-2025 03:31:41 Europe/Berlin] CSRF validation passed
+[26-Sep-2025 03:31:41 Europe/Berlin] === FORM DATA RECEIVED ===
+[26-Sep-2025 03:31:41 Europe/Berlin] Email: 'mary.nolan634@vaupk.org'
+[26-Sep-2025 03:31:41 Europe/Berlin] Full Name: 'Mary Nolan'
+[26-Sep-2025 03:31:41 Europe/Berlin] Gender: 'Female'
+[26-Sep-2025 03:31:41 Europe/Berlin] Age: '34' (type: integer)
+[26-Sep-2025 03:31:41 Europe/Berlin] Temperature: '36.5' (type: double)
+[26-Sep-2025 03:31:41 Europe/Berlin] Diagnosed: 'No'
+[26-Sep-2025 03:31:41 Europe/Berlin] Encounter: 'No'
+[26-Sep-2025 03:31:41 Europe/Berlin] Vaccinated: 'Yes'
+[26-Sep-2025 03:31:41 Europe/Berlin] Nationality: 'Filipino'
+[26-Sep-2025 03:31:41 Europe/Berlin] === BASIC VALIDATION PASSED ===
+[26-Sep-2025 03:31:41 Europe/Berlin] Attempting database insert...
+[26-Sep-2025 03:31:41 Europe/Berlin] Converted ENUM values - Diagnosed: 'NO', Encounter: 'NO', Vaccinated: 'YES'
+[26-Sep-2025 03:31:41 Europe/Berlin] SQL Query: INSERT INTO records (email, full_name, gender, age, temp, diagnosed, encountered, vaccinated, nationality) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+[26-Sep-2025 03:31:41 Europe/Berlin] Prepared statement created successfully
+[26-Sep-2025 03:31:41 Europe/Berlin] Parameters bound successfully
+[26-Sep-2025 03:31:41 Europe/Berlin] Final values to insert:
+[26-Sep-2025 03:31:41 Europe/Berlin]   email='mary.nolan634@vaupk.org', full_name='Mary Nolan', gender='Female'
+[26-Sep-2025 03:31:41 Europe/Berlin]   age=34, temp=36.5
+[26-Sep-2025 03:31:41 Europe/Berlin]   diagnosed='NO', encountered='NO', vaccinated='YES'
+[26-Sep-2025 03:31:41 Europe/Berlin]   nationality='Filipino'
+[26-Sep-2025 03:31:41 Europe/Berlin] === DATABASE INSERT SUCCESSFUL ===
+[26-Sep-2025 03:31:41 Europe/Berlin] New record ID: 32
+[26-Sep-2025 03:31:41 Europe/Berlin] === FORM SUBMISSION ENDED ===
+[26-Sep-2025 04:07:01 Europe/Berlin] Database connection successful

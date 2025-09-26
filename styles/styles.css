@@ -44,6 +44,8 @@ body {
   background-color: black;
   color: white;
   font-family: var(--ff-base);
+  padding-top: var(--nav-height, 80px);
+  /* Space for fixed navbar */
   /* line-height: 1.5;
   height: 100vh;
   margin: 0;

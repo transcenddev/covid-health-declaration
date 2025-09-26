@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid Test</title>
+    <style>
+      body {
+        background: #181818;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .quick-steps {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        border: 2px solid red;
+        padding: 20px;
+      }
+      .quick-step {
+        border: 2px solid blue;
+        padding: 20px;
+        background: rgba(0, 100, 200, 0.2);
+        border-radius: 8px;
+      }
+      .step-content h3 {
+        margin: 0 0 10px 0;
+      }
+      .step-content p {
+        margin: 0;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Grid Layout Test</h1>
+      <div class="quick-steps">
+        <div class="quick-step">
+          <div class="step-content">
+            <h3>Step 1</h3>
+            <p>This should be in the first column</p>
+          </div>
+        </div>
+        <div class="quick-step">
+          <div class="step-content">
+            <h3>Step 2</h3>
+            <p>This should be in the second column</p>
+          </div>
+        </div>
+        <div class="quick-step">
+          <div class="step-content">
+            <h3>Step 3</h3>
+            <p>This should be in the third column</p>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const quickSteps = document.querySelector(".quick-steps");
+        console.log("Element found:", !!quickSteps);
+        if (quickSteps) {
+          const style = getComputedStyle(quickSteps);
+          console.log("Display:", style.display);
+          console.log("Grid template columns:", style.gridTemplateColumns);
+          console.log("Width:", style.width);
+          console.log("Box sizing:", style.boxSizing);
+        }
+      </script>
+    </div>
+  </body>
+</html>

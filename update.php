@@ -1,44 +1,111 @@
 <?php
 // Include the database connection
 include './includes/dbconn.inc.php';
+include './includes/security.inc.php';
 
-// Get user ID from the URL
-$id = $_GET['id'];
+// Get user ID from the URL and validate
+if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
+  header('Location: dashboard_admin.php');
+  exit();
+}
 
-$sql = "SELECT * FROM records WHERE id=$id";
-$result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result);
-$email = $row['email'];
-$full_name = $row['full_name'];
-$gender = $row['gender'];
-$age = $row['age'];
-$temp = $row['temp'];
-$diagnosed = $row['diagnosed'];
-$encounter = $row['encountered'];
-$vaccinated = $row['vaccinated'];
-$nationality = $row['nationality'];
+$id = (int)$_GET['id'];
+
+// Fetch existing user data using prepared statement
+$fetch_sql = "SELECT * FROM records WHERE id = ?";
+$fetch_stmt = mysqli_prepare($conn, $fetch_sql);
+
+if (!$fetch_stmt) {
+  logSecurityEvent('Prepared statement failed in update.php: ' . mysqli_error($conn));
+  die('Database preparation error');
+}
+
+mysqli_stmt_bind_param($fetch_stmt, "i", $id);
+mysqli_stmt_execute($fetch_stmt);
+$fetch_result = mysqli_stmt_get_result($fetch_stmt);
+
+// Check if user exists
+if ($fetch_result && mysqli_num_rows($fetch_result) > 0) {
+  $user_data = mysqli_fetch_assoc($fetch_result);
+  $email = $user_data['email'];
+  $full_name = $user_data['full_name'];
+  $gender = $user_data['gender'];
+  $age = $user_data['age'];
+  $temp = $user_data['temp'];
+  $diagnosed = $user_data['diagnosed'];
+  $encounter = $user_data['encountered'];
+  $vaccinated = $user_data['vaccinated'];
+  $nationality = $user_data['nationality'];
+} else {
+  mysqli_stmt_close($fetch_stmt);
+  header('Location: dashboard_admin.php');
+  exit();
+}
+
+mysqli_stmt_close($fetch_stmt);
 
 // Process form submission
 if (isset($_POST['submit'])) {
-  // Retrieve form data
-  $email = $_POST['email'];
-  $full_name = $_POST['full_name'];
-  $gender = $_POST['gender'];
-  $age = $_POST['age'];
-  $temp = $_POST['temp'];
-  $diagnosed = $_POST['diagnosed'];
-  $encounter = $_POST['encounter'];
-  $vaccinated = $_POST['vaccinated'];
-  $nationality = $_POST['nationality'];
+  // Validate CSRF token
+  if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
+    logSecurityEvent('CSRF token validation failed in update.php for record ID: ' . $id);
+    die('CSRF token validation failed');
+  }
 
-  // Update data in the table
-  $sql = "UPDATE records SET email='$email', full_name='$full_name', gender='$gender', age='$age', temp='$temp', diagnosed='$diagnosed', encountered='$encounter', vaccinated='$vaccinated', nationality='$nationality' WHERE id='$id'";
-  $result = mysqli_query($conn, $sql);
+  // Retrieve and sanitize form data
+  $email = sanitizeInput($_POST['email']);
+  $full_name = sanitizeInput($_POST['full_name']);
+  $gender = sanitizeInput($_POST['gender']);
+  $age = filter_var($_POST['age'], FILTER_VALIDATE_INT);
+  $temp = filter_var($_POST['temp'], FILTER_VALIDATE_FLOAT);
+  $diagnosed = sanitizeInput($_POST['diagnosed']);
+  $encounter = sanitizeInput($_POST['encounter']);
+  $vaccinated = sanitizeInput($_POST['vaccinated']);
+  $nationality = sanitizeInput($_POST['nationality']);
 
-  if ($result) {
-    header('Location: dashboard_admin.php'); // Redirect back to the admin dashboard after update
+  // Validate required fields
+  if (empty($email) || empty($full_name) || empty($gender) || $age === false || $temp === false || 
+      empty($diagnosed) || empty($encounter) || empty($vaccinated) || empty($nationality)) {
+    die('All fields are required and must be valid');
+  }
+
+  // Validate email format
+  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    die('Invalid email format');
+  }
+
+  // Validate enum values
+  if (!in_array($diagnosed, ['Yes', 'No']) || !in_array($encounter, ['Yes', 'No']) || !in_array($vaccinated, ['Yes', 'No'])) {
+    die('Invalid selection values');
+  }
+
+  // Validate age and temperature ranges
+  if ($age < 0 || $age > 150) {
+    die('Invalid age range');
+  }
+  if ($temp < 30.0 || $temp > 50.0) {
+    die('Invalid temperature range');
+  }
+
+  // Update data using prepared statement
+  $update_sql = "UPDATE records SET email=?, full_name=?, gender=?, age=?, temp=?, diagnosed=?, encountered=?, vaccinated=?, nationality=? WHERE id=?";
+  $update_stmt = mysqli_prepare($conn, $update_sql);
+
+  if ($update_stmt) {
+    mysqli_stmt_bind_param($update_stmt, "sssidssssi", $email, $full_name, $gender, $age, $temp, $diagnosed, $encounter, $vaccinated, $nationality, $id);
+    
+    if (mysqli_stmt_execute($update_stmt)) {
+      mysqli_stmt_close($update_stmt);
+      header('Location: dashboard_admin.php');
+      exit();
+    } else {
+      mysqli_stmt_close($update_stmt);
+      logSecurityEvent('Database error in update.php: ' . mysqli_error($conn));
+      die('Database update error');
+    }
   } else {
-    die(mysqli_error($conn));
+    logSecurityEvent('Prepared statement failed in update.php: ' . mysqli_error($conn));
+    die('Database preparation error');
   }
 }
 
@@ -91,9 +158,12 @@ if ($fetch_result && mysqli_num_rows($fetch_result) > 0) {
   <main class="wrapper-form">
     <h2 class="update-title"><i class="fa-regular fa-pen-to-square"></i>Update</h2>
     <form method="post" action="">
+      <!-- CSRF Protection -->
+      <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+      
       <div class="mb-3">
         <label for="InputEmail" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="InputEmail" name="email" aria-describedby="emailHelp" value="<?php echo $email ?>">
+        <input type="email" class="form-control" id="InputEmail" name="email" aria-describedby="emailHelp" value="<?php echo sanitizeOutput($email); ?>" required>
         <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
       </div>
       <div class="mb-3">

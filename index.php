@@ -3,29 +3,49 @@
   ?>
 
  <main>
-   <section class="hero-section section bg-fixed">
-     <div class="hero-text">
-       <h1>Hello.</h1>
-     </div>
-   </section>
-   <section class="section">
-     <div class="section-text">
-       <p>COVID-19 is a contagious illness caused by the SARS-CoV-2 virus. While most cases result in mild to moderate respiratory symptoms and recovery without special treatment, some individuals, especially older adults and those with certain medical conditions, can become severely ill.</p>
-     </div>
-   </section>
-   <section class="section bg-fixed">
-     <p></p>
-   </section>
-   <section class="section">
-     <div class="section-text">
-       <p>
-         Prevention involves understanding the disease and its transmission, maintaining distance from others, wearing well-fitted masks, practicing hand hygiene, and getting vaccinated. The virus spreads through small liquid particles from the mouth or nose when coughing, sneezing, talking, singing, or breathing. Adhering to respiratory etiquette and self-isolating when unwell are crucial precautions.
-       </p>
+   <!-- Minimal Hero Section -->
+   <section class="hero-section section">
+     <div class="container">
+       <div class="hero-content">
+         <div class="hero-badge">
+           <i class="fa-solid fa-shield-check" aria-hidden="true"></i>
+           Official Health Declaration
+         </div>
+         <h1>COVID-19 Health Check</h1>
+         <p class="hero-subtitle">Required for facility access • Under 2 minutes • Secure & Private</p>
+         
+         <div class="hero-cta">
+           <a href="./add.php" class="btn btn-hero btn-primary">
+             <i class="fa-solid fa-clipboard-check" aria-hidden="true"></i>
+             Start Health Check
+           </a>
+         </div>
+       </div>
      </div>
    </section>
  </main>
- <footer>
-   &copy; r3kashi, 2023
+
+ <!-- Floating Action Button for Mobile -->
+ <div class="fab-container">
+   <?php if (!isset($_SESSION['userId'])): ?>
+     <a href="./add.php" class="fab" aria-label="Start Health Check">
+       <i class="fa-solid fa-plus" aria-hidden="true"></i>
+       <span class="fab-text">Start Health Check</span>
+     </a>
+   <?php else: ?>
+     <a href="./add.php" class="fab" aria-label="New Health Declaration">
+       <i class="fa-solid fa-clipboard-check" aria-hidden="true"></i>
+       <span class="fab-text">New Check</span>
+     </a>
+   <?php endif; ?>
+ </div>
+
+ <footer class="main-footer">
+   <div class="container">
+     <div class="footer-bottom">
+       <p>&copy; 2025 Health Declaration System</p>
+     </div>
+   </div>
  </footer>
  </body>
 
