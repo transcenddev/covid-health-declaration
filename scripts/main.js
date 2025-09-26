@@ -53,9 +53,9 @@ class NavigationManager {
         // Dashboard Search Functionality
         class DashboardSearchManager {
           constructor() {
-            this.searchInput = document.getElementById("searchInput");
-            this.clearButton = document.getElementById("clearSearch");
-            this.searchResults = document.getElementById("searchResults");
+            this.searchInput = document.getElementById("tableSearch");
+            this.clearButton = document.getElementById("searchClear");
+            this.searchResults = document.getElementById("resultsCounter");
             this.dataTable = document.querySelector(".data-table tbody");
             this.emptyResults = document.querySelector(".empty-search-results");
 
@@ -75,8 +75,10 @@ class NavigationManager {
           }
 
           cacheTableRows() {
-            if (this.dataTable) {
-              this.allRows = Array.from(this.dataTable.querySelectorAll("tr"));
+            // Use the correct table selector
+            const tableBody = document.querySelector(".table-wrapper tbody");
+            if (tableBody) {
+              this.allRows = Array.from(tableBody.querySelectorAll("tr"));
               this.filteredRows = [...this.allRows];
             }
           }
@@ -125,9 +127,9 @@ class NavigationManager {
             this.filteredRows = [];
 
             this.allRows.forEach((row) => {
-              const email = this.getTextContent(row.cells[1]);
-              const name = this.getTextContent(row.cells[8]);
-              const nationality = this.getTextContent(row.cells[9]);
+              const email = this.getTextContent(row.cells[0]); // Email column
+              const name = this.getTextContent(row.cells[1]);  // Name column  
+              const nationality = this.getTextContent(row.cells[8]); // Nationality column
 
               const searchableText =
                 `${email} ${name} ${nationality}`.toLowerCase();
@@ -180,9 +182,9 @@ class NavigationManager {
             const visibleRecords = this.filteredRows.length;
 
             if (this.isSearching && visibleRecords !== totalRecords) {
-              this.searchResults.textContent = `${visibleRecords} of ${totalRecords} records`;
+              this.searchResults.textContent = `(${visibleRecords} of ${totalRecords} records)`;
             } else {
-              this.searchResults.textContent = `${totalRecords} records`;
+              this.searchResults.textContent = `(${totalRecords} records)`;
             }
           }
 
@@ -488,7 +490,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const navManager = new NavigationManager();
 
   // Initialize search functionality if on dashboard page
-  if (document.getElementById("searchInput")) {
+  if (document.getElementById("tableSearch")) {
     const searchManager = new DashboardSearchManager();
 
     // Make search manager globally available for potential refresh needs

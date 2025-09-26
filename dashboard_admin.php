@@ -124,24 +124,33 @@ mysqli_stmt_close($stmt);
       <!-- Clean Table Container -->
       <div class="table-container">
         <div class="table-header">
-          <h2 class="table-title">
-            <i class="fa-solid fa-table"></i>
-            Health Records
-            <span class="results-counter" id="resultsCounter"></span>
-          </h2>
-          <div class="table-search">
-            <div class="search-input-wrapper">
-              <i class="fa-solid fa-search search-icon"></i>
-              <input 
-                type="text" 
-                class="search-input" 
-                id="tableSearch" 
-                placeholder="Search by name, email, or nationality..."
-                autocomplete="off"
-              >
-              <button type="button" class="search-clear" id="searchClear" title="Clear search">
-                <i class="fa-solid fa-times"></i>
-              </button>
+          <div class="table-header-left">
+            <h2 class="table-title">
+              <i class="fa-solid fa-table"></i>
+              Health Records
+              <span class="results-counter" id="resultsCounter">(0 records)</span>
+            </h2>
+          </div>
+          <div class="table-header-right">
+            <div class="search-container">
+              <div class="search-input-wrapper">
+                <i class="fa-solid fa-search search-icon"></i>
+                <input 
+                  type="text" 
+                  class="search-input" 
+                  id="tableSearch" 
+                  placeholder="Search records..."
+                  autocomplete="off"
+                >
+                <button type="button" class="search-clear" id="searchClear" title="Clear search">
+                  <i class="fa-solid fa-times"></i>
+                </button>
+              </div>
+              <div class="search-filters">
+                <button type="button" class="filter-btn" id="filterBtn" title="Advanced filters">
+                  <i class="fa-solid fa-sliders-h"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
