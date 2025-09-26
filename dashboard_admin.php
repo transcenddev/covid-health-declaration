@@ -130,7 +130,8 @@ mysqli_stmt_close($stmt);
           </h2>
         </div>
         
-        <table>
+        <div class="table-wrapper">
+          <table>
           <thead>
             <tr>
               <th>Email</th>
@@ -232,6 +233,7 @@ mysqli_stmt_close($stmt);
       </table>
     </div>
   </div>
+  </div>
 
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loadingOverlay">
@@ -264,6 +266,25 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+  
+  // Check if table needs horizontal scrolling
+  const tableWrapper = document.querySelector('.table-wrapper');
+  const tableContainer = document.querySelector('.table-container');
+  
+  function checkTableScroll() {
+    if (tableWrapper && tableContainer) {
+      const needsScroll = tableWrapper.scrollWidth > tableWrapper.clientWidth;
+      if (needsScroll) {
+        tableContainer.classList.add('has-scroll');
+      } else {
+        tableContainer.classList.remove('has-scroll');
+      }
+    }
+  }
+  
+  // Check on load and resize
+  checkTableScroll();
+  window.addEventListener('resize', checkTableScroll);
 });
 </script>
 </body>

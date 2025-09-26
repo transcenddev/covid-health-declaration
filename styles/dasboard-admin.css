@@ -149,6 +149,25 @@ body {
   border-radius: var(--border-radius);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+/* Scroll indicator */
+.table-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 100%;
+  background: linear-gradient(to left, rgba(24, 24, 24, 0.8), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.table-container.has-scroll::after {
+  opacity: 1;
 }
 
 .table-header {
@@ -172,6 +191,32 @@ body {
   font-size: 1.125rem;
 }
 
+/* Table wrapper for horizontal scrolling */
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+/* Custom scrollbar for table */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--clr-complementary);
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #0891b2;
+}
+
 /* Dark Theme Table Styling */
 table {
   width: 100%;
@@ -179,6 +224,7 @@ table {
   background: transparent;
   font-size: 0.875rem;
   line-height: 1.4;
+  min-width: 1000px; /* Minimum width to ensure all columns are visible */
 }
 
 thead th {
@@ -191,14 +237,27 @@ thead th {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 1px solid var(--clr-border);
+  white-space: nowrap;
+  position: relative;
 }
+
+/* Specific column widths for better layout */
+thead th:nth-child(1) { width: 180px; } /* Email */
+thead th:nth-child(2) { width: 150px; } /* Name */
+thead th:nth-child(3) { width: 80px; }  /* Gender */
+thead th:nth-child(4) { width: 60px; }  /* Age */
+thead th:nth-child(5) { width: 100px; } /* Temperature */
+thead th:nth-child(6) { width: 90px; }  /* Diagnosed */
+thead th:nth-child(7) { width: 100px; } /* Encountered */
+thead th:nth-child(8) { width: 90px; }  /* Vaccinated */
+thead th:nth-child(9) { width: 120px; } /* Nationality */
+thead th:nth-child(10) { width: 180px; min-width: 180px; } /* Actions */
 
 tbody td {
   padding: 1rem;
   border-bottom: 1px solid var(--clr-border-light);
   color: rgba(255, 255, 255, 0.9);
   vertical-align: middle;
-  white-space: nowrap;
 }
 
 tbody tr {
@@ -214,24 +273,26 @@ tbody tr:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  min-width: 140px;
 }
 
 .action-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: var(--transition);
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   text-decoration: none;
   box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 /* Add hover tooltip effect */
@@ -363,14 +424,19 @@ tbody tr:hover {
 tbody td[data-cell="email"] {
   font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.7);
-  max-width: 200px;
+  max-width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 tbody td[data-cell="name"] {
   font-weight: 500;
   color: var(--clr-white);
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 tbody td[data-cell="gender"] {
@@ -378,28 +444,37 @@ tbody td[data-cell="gender"] {
   text-align: center;
   width: 80px;
   text-transform: capitalize;
+  white-space: nowrap;
 }
 
 tbody td[data-cell="age"] {
   font-weight: 500;
   text-align: center;
   width: 60px;
+  white-space: nowrap;
 }
 
 tbody td[data-cell="temperature"] {
   font-weight: 600;
   text-align: center;
   width: 100px;
+  white-space: nowrap;
 }
 
 tbody td[data-cell="nationality"] {
   font-size: 0.8125rem;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 tbody td[data-cell="actions"] {
-  width: 160px;
+  width: 180px;
+  min-width: 180px;
   text-align: center;
   padding: 1rem 0.75rem;
+  white-space: nowrap;
 }
 
 /* Dark Theme Loading State */
@@ -445,11 +520,32 @@ tbody td[data-cell="actions"] {
 }
 
 /* Enhanced Responsive Design */
+@media (min-width: 1200px) {
+  .wrapper {
+    max-width: 1400px;
+    padding: 120px 2rem 2rem;
+  }
+  
+  table {
+    min-width: 1200px;
+  }
+}
+
 @media (max-width: 1024px) {
   .status-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
   }
+  
+  table {
+    min-width: 900px;
+  }
+  
+  /* Adjust column widths for medium screens */
+  thead th:nth-child(1) { width: 160px; } /* Email */
+  thead th:nth-child(2) { width: 130px; } /* Name */
+  thead th:nth-child(9) { width: 100px; } /* Nationality */
+  thead th:nth-child(10) { width: 160px; } /* Actions */
 }
 
 @media (max-width: 768px) {
