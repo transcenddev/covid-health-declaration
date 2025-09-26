@@ -127,7 +127,23 @@ mysqli_stmt_close($stmt);
           <h2 class="table-title">
             <i class="fa-solid fa-table"></i>
             Health Records
+            <span class="results-counter" id="resultsCounter"></span>
           </h2>
+          <div class="table-search">
+            <div class="search-input-wrapper">
+              <i class="fa-solid fa-search search-icon"></i>
+              <input 
+                type="text" 
+                class="search-input" 
+                id="tableSearch" 
+                placeholder="Search by name, email, or nationality..."
+                autocomplete="off"
+              >
+              <button type="button" class="search-clear" id="searchClear" title="Clear search">
+                <i class="fa-solid fa-times"></i>
+              </button>
+            </div>
+          </div>
         </div>
         
         <div class="table-wrapper">
@@ -231,6 +247,13 @@ mysqli_stmt_close($stmt);
           ?>
         </tbody>
       </table>
+    </div>
+    
+    <!-- Empty Search Results -->
+    <div class="empty-search-results">
+      <i class="fa-solid fa-search"></i>
+      <h3>No records found</h3>
+      <p>Try adjusting your search terms or clear the search to see all records.</p>
     </div>
   </div>
   </div>
