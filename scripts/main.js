@@ -222,6 +222,14 @@ class DashboardSearchManager {
     this.dataTable = document.querySelector(".data-table tbody");
     this.emptyResults = document.querySelector(".empty-search-results");
 
+    console.log("Search elements found:", {
+      searchInput: !!this.searchInput,
+      clearButton: !!this.clearButton,
+      searchResults: !!this.searchResults,
+      dataTable: !!this.dataTable,
+      emptyResults: !!this.emptyResults
+    });
+
     this.allRows = [];
     this.filteredRows = [];
     this.isSearching = false;
@@ -254,13 +262,19 @@ class DashboardSearchManager {
   setupEventListeners() {
     // Real-time search as user types
     this.searchInput.addEventListener("input", (e) => {
+      console.log("Input event triggered:", e.target.value);
       this.handleSearch(e.target.value);
     });
 
     // Clear search functionality
-    this.clearButton.addEventListener("click", () => {
-      this.clearSearch();
-    });
+    if (this.clearButton) {
+      this.clearButton.addEventListener("click", () => {
+        console.log("Clear button clicked");
+        this.clearSearch();
+      });
+    } else {
+      console.warn("Clear button not found!");
+    }
 
     // Handle enter key for search
     this.searchInput.addEventListener("keydown", (e) => {
@@ -273,6 +287,8 @@ class DashboardSearchManager {
         this.clearSearch();
       }
     });
+
+    console.log("Event listeners set up successfully");
   }
 
   handleSearch(searchTerm) {
@@ -280,7 +296,9 @@ class DashboardSearchManager {
     console.log("Searching for:", trimmedTerm);
 
     // Show/hide clear button
-    this.clearButton.classList.toggle("show", trimmedTerm.length > 0);
+    if (this.clearButton) {
+      this.clearButton.classList.toggle("show", trimmedTerm.length > 0);
+    }
 
     if (trimmedTerm === "") {
       this.showAllRows();
@@ -344,7 +362,9 @@ class DashboardSearchManager {
 
   clearSearch() {
     this.searchInput.value = "";
-    this.clearButton.classList.remove("show");
+    if (this.clearButton) {
+      this.clearButton.classList.remove("show");
+    }
     this.showAllRows();
     this.searchInput.focus();
   }

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Function Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #181818;
+            color: white;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        .search-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 300px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #333;
+            color: white;
+        }
+        .search-clear {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #07c297;
+            cursor: pointer;
+            display: none;
+        }
+        .search-clear.show {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #666;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+        }
+        .empty-search-results {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #666;
+            margin-top: 20px;
+        }
+        .results-counter {
+            color: #07c297;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>COVID-19 Search Function Test</h1>
+    
+    <div class="search-container">
+        <div class="search-input-wrapper">
+            <input 
+                type="text" 
+                class="search-input" 
+                id="tableSearch" 
+                placeholder="Search records..."
+                autocomplete="off"
+            >
+            <button type="button" class="search-clear" id="searchClear">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <span class="results-counter" id="resultsCounter">(0 records)</span>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                    <th>Temperature</th>
+                    <th>Diagnosed</th>
+                    <th>Encountered</th>
+                    <th>Vaccinated</th>
+                    <th>Nationality</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>john.doe@email.com</td>
+                    <td>John Doe</td>
+                    <td>Male</td>
+                    <td>25</td>
+                    <td>36.5°C</td>
+                    <td>NO</td>
+                    <td>NO</td>
+                    <td>YES</td>
+                    <td>Filipino</td>
+                    <td>Actions</td>
+                </tr>
+                <tr>
+                    <td>jane.smith@email.com</td>
+                    <td>Jane Smith</td>
+                    <td>Female</td>
+                    <td>30</td>
+                    <td>37.1°C</td>
+                    <td>NO</td>
+                    <td>YES</td>
+                    <td>YES</td>
+                    <td>American</td>
+                    <td>Actions</td>
+                </tr>
+                <tr>
+                    <td>maria.garcia@email.com</td>
+                    <td>Maria Garcia</td>
+                    <td>Female</td>
+                    <td>28</td>
+                    <td>36.8°C</td>
+                    <td>NO</td>
+                    <td>NO</td>
+                    <td>YES</td>
+                    <td>Spanish</td>
+                    <td>Actions</td>
+                </tr>
+                <tr>
+                    <td>bob.johnson@email.com</td>
+                    <td>Bob Johnson</td>
+                    <td>Male</td>
+                    <td>35</td>
+                    <td>38.2°C</td>
+                    <td>YES</td>
+                    <td>YES</td>
+                    <td>NO</td>
+                    <td>Canadian</td>
+                    <td>Actions</td>
+                </tr>
+                <tr>
+                    <td>anna.lee@email.com</td>
+                    <td>Anna Lee</td>
+                    <td>Female</td>
+                    <td>22</td>
+                    <td>36.3°C</td>
+                    <td>NO</td>
+                    <td>NO</td>
+                    <td>YES</td>
+                    <td>Korean</td>
+                    <td>Actions</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="empty-search-results">
+        <i class="fa-solid fa-search"></i>
+        <h3>No records found</h3>
+        <p>Try adjusting your search terms or clear the search to see all records.</p>
+    </div>
+
+    <script src="scripts/main.js"></script>
+    
+    <script>
+        // Additional debugging
+        console.log("Test page loaded");
+        console.log("Elements present:", {
+            tableSearch: document.getElementById("tableSearch"),
+            searchClear: document.getElementById("searchClear"),
+            resultsCounter: document.getElementById("resultsCounter"),
+            tableBody: document.querySelector(".table-wrapper tbody"),
+            emptyResults: document.querySelector(".empty-search-results")
+        });
+    </script>
+</body>
+</html>
