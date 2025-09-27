@@ -49,155 +49,6 @@ class NavigationManager {
         this.navbar.classList.remove("scrolled", "scroll-down", "scroll-up");
         this.navbar.style.backdropFilter = "blur(10px)";
         this.navbar.style.webkitBackdropFilter = "blur(10px)";
-
-        // Dashboard Search Functionality
-        class DashboardSearchManager {
-          constructor() {
-            this.searchInput = document.getElementById("tableSearch");
-            this.clearButton = document.getElementById("searchClear");
-            this.searchResults = document.getElementById("resultsCounter");
-            this.dataTable = document.querySelector(".data-table tbody");
-            this.emptyResults = document.querySelector(".empty-search-results");
-
-            this.allRows = [];
-            this.filteredRows = [];
-            this.isSearching = false;
-
-            this.init();
-          }
-
-          init() {
-            if (!this.searchInput) return;
-
-            this.cacheTableRows();
-            this.setupEventListeners();
-            this.updateResultsCount();
-          }
-
-          cacheTableRows() {
-            // Use the correct table selector
-            const tableBody = document.querySelector(".table-wrapper tbody");
-            if (tableBody) {
-              this.allRows = Array.from(tableBody.querySelectorAll("tr"));
-              this.filteredRows = [...this.allRows];
-            }
-          }
-
-          setupEventListeners() {
-            // Real-time search as user types
-            this.searchInput.addEventListener("input", (e) => {
-              this.handleSearch(e.target.value);
-            });
-
-            // Clear search functionality
-            this.clearButton.addEventListener("click", () => {
-              this.clearSearch();
-            });
-
-            // Handle enter key for search
-            this.searchInput.addEventListener("keydown", (e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                this.searchInput.blur();
-              }
-
-              if (e.key === "Escape") {
-                this.clearSearch();
-              }
-            });
-          }
-
-          handleSearch(searchTerm) {
-            const trimmedTerm = searchTerm.trim().toLowerCase();
-
-            // Show/hide clear button
-            this.clearButton.classList.toggle("show", trimmedTerm.length > 0);
-
-            if (trimmedTerm === "") {
-              this.showAllRows();
-              return;
-            }
-
-            this.isSearching = true;
-            this.filterRows(trimmedTerm);
-            this.updateResultsCount();
-          }
-
-          filterRows(searchTerm) {
-            this.filteredRows = [];
-
-            this.allRows.forEach((row) => {
-              const email = this.getTextContent(row.cells[0]); // Email column
-              const name = this.getTextContent(row.cells[1]);  // Name column  
-              const nationality = this.getTextContent(row.cells[8]); // Nationality column
-
-              const searchableText =
-                `${email} ${name} ${nationality}`.toLowerCase();
-
-              if (searchableText.includes(searchTerm)) {
-                row.style.display = "";
-                this.filteredRows.push(row);
-              } else {
-                row.style.display = "none";
-              }
-            });
-
-            // Show empty state if no results
-            if (this.emptyResults) {
-              this.emptyResults.style.display =
-                this.filteredRows.length === 0 ? "block" : "none";
-            }
-          }
-
-          getTextContent(cell) {
-            return cell ? cell.textContent.trim() : "";
-          }
-
-          showAllRows() {
-            this.isSearching = false;
-            this.filteredRows = [...this.allRows];
-
-            this.allRows.forEach((row) => {
-              row.style.display = "";
-            });
-
-            if (this.emptyResults) {
-              this.emptyResults.style.display = "none";
-            }
-
-            this.updateResultsCount();
-          }
-
-          clearSearch() {
-            this.searchInput.value = "";
-            this.clearButton.classList.remove("show");
-            this.showAllRows();
-            this.searchInput.focus();
-          }
-
-          updateResultsCount() {
-            if (!this.searchResults) return;
-
-            const totalRecords = this.allRows.length;
-            const visibleRecords = this.filteredRows.length;
-
-            if (this.isSearching && visibleRecords !== totalRecords) {
-              this.searchResults.textContent = `(${visibleRecords} of ${totalRecords} records)`;
-            } else {
-              this.searchResults.textContent = `(${totalRecords} records)`;
-            }
-          }
-
-          // Method to refresh search after data updates
-          refresh() {
-            this.cacheTableRows();
-            if (this.searchInput.value.trim()) {
-              this.handleSearch(this.searchInput.value);
-            } else {
-              this.updateResultsCount();
-            }
-          }
-        }
         this.navbar.style.setProperty("--dynamic-bg-opacity", 0.1);
       }
 
@@ -362,6 +213,154 @@ class NavigationManager {
   }
 }
 
+// Dashboard Search Functionality
+class DashboardSearchManager {
+  constructor() {
+    this.searchInput = document.getElementById("tableSearch");
+    this.clearButton = document.getElementById("searchClear");
+    this.searchResults = document.getElementById("resultsCounter");
+    this.dataTable = document.querySelector(".data-table tbody");
+    this.emptyResults = document.querySelector(".empty-search-results");
+
+    this.allRows = [];
+    this.filteredRows = [];
+    this.isSearching = false;
+
+    this.init();
+  }
+
+  init() {
+    if (!this.searchInput) return;
+
+    this.cacheTableRows();
+    this.setupEventListeners();
+    this.updateResultsCount();
+  }
+
+  cacheTableRows() {
+    // Use the correct table selector
+    const tableBody = document.querySelector(".table-wrapper tbody");
+    if (tableBody) {
+      this.allRows = Array.from(tableBody.querySelectorAll("tr"));
+      this.filteredRows = [...this.allRows];
+    }
+  }
+
+  setupEventListeners() {
+    // Real-time search as user types
+    this.searchInput.addEventListener("input", (e) => {
+      this.handleSearch(e.target.value);
+    });
+
+    // Clear search functionality
+    this.clearButton.addEventListener("click", () => {
+      this.clearSearch();
+    });
+
+    // Handle enter key for search
+    this.searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        this.searchInput.blur();
+      }
+
+      if (e.key === "Escape") {
+        this.clearSearch();
+      }
+    });
+  }
+
+  handleSearch(searchTerm) {
+    const trimmedTerm = searchTerm.trim().toLowerCase();
+
+    // Show/hide clear button
+    this.clearButton.classList.toggle("show", trimmedTerm.length > 0);
+
+    if (trimmedTerm === "") {
+      this.showAllRows();
+      return;
+    }
+
+    this.isSearching = true;
+    this.filterRows(trimmedTerm);
+    this.updateResultsCount();
+  }
+
+  filterRows(searchTerm) {
+    this.filteredRows = [];
+
+    this.allRows.forEach((row) => {
+      const email = this.getTextContent(row.cells[0]); // Email column
+      const name = this.getTextContent(row.cells[1]); // Name column
+      const nationality = this.getTextContent(row.cells[8]); // Nationality column
+
+      const searchableText = `${email} ${name} ${nationality}`.toLowerCase();
+
+      if (searchableText.includes(searchTerm)) {
+        row.style.display = "";
+        this.filteredRows.push(row);
+      } else {
+        row.style.display = "none";
+      }
+    });
+
+    // Show empty state if no results
+    if (this.emptyResults) {
+      this.emptyResults.style.display =
+        this.filteredRows.length === 0 ? "block" : "none";
+    }
+  }
+
+  getTextContent(cell) {
+    return cell ? cell.textContent.trim() : "";
+  }
+
+  showAllRows() {
+    this.isSearching = false;
+    this.filteredRows = [...this.allRows];
+
+    this.allRows.forEach((row) => {
+      row.style.display = "";
+    });
+
+    if (this.emptyResults) {
+      this.emptyResults.style.display = "none";
+    }
+
+    this.updateResultsCount();
+  }
+
+  clearSearch() {
+    this.searchInput.value = "";
+    this.clearButton.classList.remove("show");
+    this.showAllRows();
+    this.searchInput.focus();
+  }
+
+  updateResultsCount() {
+    if (!this.searchResults) return;
+
+    const totalRecords = this.allRows.length;
+    const visibleRecords = this.filteredRows.length;
+
+    if (this.isSearching && visibleRecords !== totalRecords) {
+      this.searchResults.textContent = `(${visibleRecords} of ${totalRecords} records)`;
+    } else {
+      this.searchResults.textContent = `(${totalRecords} records)`;
+    }
+  }
+
+  // Method to refresh search after data updates
+  refresh() {
+    this.cacheTableRows();
+    if (this.searchInput.value.trim()) {
+      this.handleSearch(this.searchInput.value);
+    } else {
+      this.updateResultsCount();
+    }
+  }
+}
+
 // Page Loading Indicator
 class LoadingManager {
   constructor() {
@@ -417,6 +416,14 @@ document.addEventListener("DOMContentLoaded", () => {
   new NavigationManager();
   new LoadingManager();
   new ActivePageManager();
+  
+  // Initialize search functionality if on dashboard page
+  if (document.getElementById("tableSearch")) {
+    const searchManager = new DashboardSearchManager();
+    
+    // Make search manager globally available for potential refresh needs
+    window.dashboardSearch = searchManager;
+  }
 });
 
 // Responsive table functionality (keep existing)
@@ -484,6 +491,26 @@ function AddTableARIA() {
   }
 }
 
+// Active Page Detection
+class ActivePageManager {
+  constructor() {
+    this.setActiveLinks();
+  }
+
+  setActiveLinks() {
+    const currentPage =
+      window.location.pathname.split("/").pop() || "index.php";
+    const navLinks = document.querySelectorAll(".nav-link, .nav-mobile-link");
+
+    navLinks.forEach((link) => {
+      const linkPage = link.getAttribute("href");
+      if (linkPage && linkPage.includes(currentPage)) {
+        link.classList.add("active");
+      }
+    });
+  }
+}
+
 // Initialize everything when DOM is ready
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize navigation
@@ -500,13 +527,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize loading manager
   const loadingManager = new LoadingManager();
 
+  // Initialize active page manager
+  const activePageManager = new ActivePageManager();
+
   // Initialize table enhancements
   ResponsiveCellHeaders("Books");
   AddTableARIA();
 
   // Initialize table scroll detection for dashboard
   const tableContainer = document.querySelector(
-    ".table-container .scrollable-table"
+    ".table-container .table-wrapper"
   );
   if (tableContainer) {
     const container = tableContainer.parentElement;
