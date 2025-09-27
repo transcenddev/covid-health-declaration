@@ -222,14 +222,6 @@ class DashboardSearchManager {
     this.dataTable = document.querySelector(".data-table tbody");
     this.emptyResults = document.querySelector(".empty-search-results");
 
-    console.log("Search elements found:", {
-      searchInput: !!this.searchInput,
-      clearButton: !!this.clearButton,
-      searchResults: !!this.searchResults,
-      dataTable: !!this.dataTable,
-      emptyResults: !!this.emptyResults,
-    });
-
     this.allRows = [];
     this.filteredRows = [];
     this.isSearching = false;
@@ -239,19 +231,12 @@ class DashboardSearchManager {
 
   init() {
     if (!this.searchInput) {
-      console.log("Search input not found!");
       return;
     }
 
-    console.log("Initializing search functionality...");
     this.cacheTableRows();
     this.setupEventListeners();
     this.updateResultsCount();
-    console.log(
-      "Search functionality initialized with",
-      this.allRows.length,
-      "rows"
-    );
   }
 
   cacheTableRows() {
@@ -266,18 +251,14 @@ class DashboardSearchManager {
   setupEventListeners() {
     // Real-time search as user types
     this.searchInput.addEventListener("input", (e) => {
-      console.log("Input event triggered:", e.target.value);
       this.handleSearch(e.target.value);
     });
 
     // Clear search functionality
     if (this.clearButton) {
       this.clearButton.addEventListener("click", () => {
-        console.log("Clear button clicked");
         this.clearSearch();
       });
-    } else {
-      console.warn("Clear button not found!");
     }
 
     // Handle enter key for search
@@ -291,13 +272,10 @@ class DashboardSearchManager {
         this.clearSearch();
       }
     });
-
-    console.log("Event listeners set up successfully");
   }
 
   handleSearch(searchTerm) {
     const trimmedTerm = searchTerm.trim().toLowerCase();
-    console.log("Searching for:", trimmedTerm);
 
     // Show/hide clear button
     if (this.clearButton) {
@@ -316,7 +294,6 @@ class DashboardSearchManager {
 
   filterRows(searchTerm) {
     this.filteredRows = [];
-    console.log("Filtering", this.allRows.length, "rows for term:", searchTerm);
 
     this.allRows.forEach((row) => {
       const email = this.getTextContent(row.cells[0]); // Email column
@@ -325,23 +302,13 @@ class DashboardSearchManager {
 
       const searchableText = `${email} ${name} ${nationality}`.toLowerCase();
 
-      console.log("Row data:", { email, name, nationality, searchableText });
-
       if (searchableText.includes(searchTerm)) {
         row.style.display = "";
         this.filteredRows.push(row);
-        console.log("Row matched!");
       } else {
         row.style.display = "none";
       }
     });
-
-    console.log(
-      "Filtered results:",
-      this.filteredRows.length,
-      "out of",
-      this.allRows.length
-    );
 
     // Show empty state if no results
     if (this.emptyResults) {
