@@ -227,7 +227,7 @@ class DashboardSearchManager {
       clearButton: !!this.clearButton,
       searchResults: !!this.searchResults,
       dataTable: !!this.dataTable,
-      emptyResults: !!this.emptyResults
+      emptyResults: !!this.emptyResults,
     });
 
     this.allRows = [];
@@ -247,7 +247,11 @@ class DashboardSearchManager {
     this.cacheTableRows();
     this.setupEventListeners();
     this.updateResultsCount();
-    console.log("Search functionality initialized with", this.allRows.length, "rows");
+    console.log(
+      "Search functionality initialized with",
+      this.allRows.length,
+      "rows"
+    );
   }
 
   cacheTableRows() {
@@ -332,7 +336,12 @@ class DashboardSearchManager {
       }
     });
 
-    console.log("Filtered results:", this.filteredRows.length, "out of", this.allRows.length);
+    console.log(
+      "Filtered results:",
+      this.filteredRows.length,
+      "out of",
+      this.allRows.length
+    );
 
     // Show empty state if no results
     if (this.emptyResults) {
@@ -443,22 +452,7 @@ class ActivePageManager {
   }
 }
 
-// Initialize when DOM is loaded
-document.addEventListener("DOMContentLoaded", () => {
-  new NavigationManager();
-  new LoadingManager();
-  new ActivePageManager();
-  
-  // Initialize search functionality if on dashboard page
-  if (document.getElementById("tableSearch")) {
-    const searchManager = new DashboardSearchManager();
-    
-    // Make search manager globally available for potential refresh needs
-    window.dashboardSearch = searchManager;
-  }
-});
-
-// Responsive table functionality (keep existing)
+// Responsive table functionality
 function ResponsiveCellHeaders(elmID) {
   try {
     var THarray = [];
@@ -520,26 +514,6 @@ function AddTableARIA() {
     }
   } catch (e) {
     console.log("AddTableARIA(): " + e);
-  }
-}
-
-// Active Page Detection
-class ActivePageManager {
-  constructor() {
-    this.setActiveLinks();
-  }
-
-  setActiveLinks() {
-    const currentPage =
-      window.location.pathname.split("/").pop() || "index.php";
-    const navLinks = document.querySelectorAll(".nav-link, .nav-mobile-link");
-
-    navLinks.forEach((link) => {
-      const linkPage = link.getAttribute("href");
-      if (linkPage && linkPage.includes(currentPage)) {
-        link.classList.add("active");
-      }
-    });
   }
 }
 
