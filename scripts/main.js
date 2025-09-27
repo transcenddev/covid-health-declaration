@@ -230,11 +230,16 @@ class DashboardSearchManager {
   }
 
   init() {
-    if (!this.searchInput) return;
+    if (!this.searchInput) {
+      console.log("Search input not found!");
+      return;
+    }
 
+    console.log("Initializing search functionality...");
     this.cacheTableRows();
     this.setupEventListeners();
     this.updateResultsCount();
+    console.log("Search functionality initialized with", this.allRows.length, "rows");
   }
 
   cacheTableRows() {
@@ -272,6 +277,7 @@ class DashboardSearchManager {
 
   handleSearch(searchTerm) {
     const trimmedTerm = searchTerm.trim().toLowerCase();
+    console.log("Searching for:", trimmedTerm);
 
     // Show/hide clear button
     this.clearButton.classList.toggle("show", trimmedTerm.length > 0);
@@ -288,6 +294,7 @@ class DashboardSearchManager {
 
   filterRows(searchTerm) {
     this.filteredRows = [];
+    console.log("Filtering", this.allRows.length, "rows for term:", searchTerm);
 
     this.allRows.forEach((row) => {
       const email = this.getTextContent(row.cells[0]); // Email column
@@ -296,13 +303,18 @@ class DashboardSearchManager {
 
       const searchableText = `${email} ${name} ${nationality}`.toLowerCase();
 
+      console.log("Row data:", { email, name, nationality, searchableText });
+
       if (searchableText.includes(searchTerm)) {
         row.style.display = "";
         this.filteredRows.push(row);
+        console.log("Row matched!");
       } else {
         row.style.display = "none";
       }
     });
+
+    console.log("Filtered results:", this.filteredRows.length, "out of", this.allRows.length);
 
     // Show empty state if no results
     if (this.emptyResults) {
