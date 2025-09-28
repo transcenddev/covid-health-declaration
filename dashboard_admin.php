@@ -56,7 +56,19 @@ $query = "SELECT * FROM records WHERE 1=1 $dateCondition";
 $stmt = mysqli_prepare($conn, $query);
 
 if (!$stmt) {
+    // Log the error and show user-friendly message
     logSecurityEvent('Prepared statement failed in dashboard_admin.php: ' . mysqli_error($conn));
+    
+    // Check if the error is due to missing created_at column
+    if (strpos(mysqli_error($conn), 'created_at') !== false) {
+        echo '<div style="background: #dc2626; color: white; padding: 1rem; margin: 1rem; border-radius: 8px;">';
+        echo '<h3>Database Update Required</h3>';
+        echo '<p>The time range filter requires a database update. Please run the migration script located at:</p>';
+        echo '<code>database/add_created_at_migration.sql</code>';
+        echo '</div>';
+        exit();
+    }
+    
     die('Database preparation error');
 }
 
