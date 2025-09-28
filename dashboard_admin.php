@@ -12,6 +12,18 @@ if (!isValidSession()) {
     exit();
 }
 
+// Handle quick filters
+$quickFilter = $_GET['quick'] ?? '';
+$validQuickFilters = ['vaccinated', 'encountered', 'fever', 'today'];
+if (!empty($quickFilter) && !in_array($quickFilter, $validQuickFilters)) {
+    $quickFilter = '';
+}
+
+// Handle CSV export
+if (isset($_GET['export']) && $_GET['export'] === 'csv') {
+    // Build export query with current filters (existing CSV export code would go here)
+}
+
 // Handle time range filter
 $timeRange = $_GET['range'] ?? $_SESSION['dashboard_time_range'] ?? 'all';
 $validRanges = ['today', '7days', '30days', 'all'];
@@ -79,6 +91,26 @@ switch ($kpiFilter) {
         break;
 }
 
+// Build quick filter condition
+$quickCondition = '';
+switch ($quickFilter) {
+    case 'vaccinated':
+        $quickCondition = "AND vaccinated = 'YES'";
+        break;
+    case 'encountered':
+        $quickCondition = "AND encountered = 'YES'";
+        break;
+    case 'fever':
+        $quickCondition = 'AND temp >= 37.5';
+        break;
+    case 'today':
+        $quickCondition = 'AND DATE(created_at) = CURDATE()';
+        break;
+    default:
+        $quickCondition = '';
+        break;
+}
+
 // Get range display text
 $rangeDisplayText = [
     'today' => 'Today',
@@ -105,30 +137,56 @@ $filterDisplayText = [
     '' => ''
 ][$kpiFilter];
 
+// Get quick filter display text
+$quickFilterDisplayText = [
+    'vaccinated' => 'Vaccinated',
+    'encountered' => 'COVID Encounters',
+    'fever' => 'High Temperature',
+    'today' => 'Today\'s Records',
+    '' => ''
+][$quickFilter];
+
 // Function to calculate trend data
-function calculateTrendData($conn, $currentCondition, $previousCondition, $kpiCondition) {
-    $currentQuery = "SELECT * FROM records WHERE 1=1 $currentCondition";
-    $previousQuery = "SELECT * FROM records WHERE 1=1 $previousCondition";
+function calculateTrendData($conn, $currentCondition, $previousCondition, $kpiCondition, $quickCondition = '') {
+    // Initialize default values
+    $current = ['total' => 0, 'encountered' => 0, 'vaccinated' => 0, 'fever' => 0, 'adults' => 0, 'international' => 0];
+    $previous = ['total' => 0, 'encountered' => 0, 'vaccinated' => 0, 'fever' => 0, 'adults' => 0, 'international' => 0];
     
-    $currentStmt = mysqli_prepare($conn, $currentQuery);
-    $previousStmt = mysqli_prepare($conn, $previousQuery);
-    
-    if (!$currentStmt || !$previousStmt) {
-        logSecurityEvent('Trend calculation prepared statement failed: ' . mysqli_error($conn));
-        return [
-            'current' => ['total' => 0, 'encountered' => 0, 'vaccinated' => 0, 'fever' => 0, 'adults' => 0, 'international' => 0],
-            'previous' => ['total' => 0, 'encountered' => 0, 'vaccinated' => 0, 'fever' => 0, 'adults' => 0, 'international' => 0]
-        ];
+    // Check if created_at column exists
+    $columnCheck = mysqli_query($conn, "SHOW COLUMNS FROM records LIKE 'created_at'");
+    if (mysqli_num_rows($columnCheck) == 0) {
+        // If created_at doesn't exist, return current data only (no trends)
+        $query = "SELECT * FROM records WHERE 1=1";
+        $result = mysqli_query($conn, $query);
+        
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $current['total']++;
+                if ($row['encountered'] == 'YES') $current['encountered']++;
+                if ($row['vaccinated'] == 'YES') $current['vaccinated']++;
+                if ($row['temp'] > 37.5) $current['fever']++;
+                if ($row['age'] >= 18) $current['adults']++;
+                
+                $nationality = strtolower(trim($row['nationality']));
+                $philippineVariants = ['philippines', 'philippine', 'filipino', 'pilipino'];
+                $isFilipino = false;
+                foreach ($philippineVariants as $variant) {
+                    if (strpos($nationality, $variant) !== false) {
+                        $isFilipino = true;
+                        break;
+                    }
+                }
+                if (!$isFilipino) $current['international']++;
+            }
+            mysqli_free_result($result);
+        }
+        return ['current' => $current, 'previous' => $previous];
     }
     
-    mysqli_stmt_execute($currentStmt);
-    mysqli_stmt_execute($previousStmt);
-    
-    $currentResult = mysqli_stmt_get_result($currentStmt);
-    $previousResult = mysqli_stmt_get_result($previousStmt);
-    
     // Process current period data
-    $current = ['total' => 0, 'encountered' => 0, 'vaccinated' => 0, 'fever' => 0, 'adults' => 0, 'international' => 0];
+    $currentQuery = "SELECT * FROM records WHERE 1=1 $currentCondition $quickCondition";
+    $currentResult = mysqli_query($conn, $currentQuery);
+    
     if ($currentResult) {
         while ($row = mysqli_fetch_assoc($currentResult)) {
             $current['total']++;
@@ -148,10 +206,15 @@ function calculateTrendData($conn, $currentCondition, $previousCondition, $kpiCo
             }
             if (!$isFilipino) $current['international']++;
         }
+        mysqli_free_result($currentResult);
+    } else {
+        logSecurityEvent('Current period query failed: ' . mysqli_error($conn));
     }
     
     // Process previous period data
-    $previous = ['total' => 0, 'encountered' => 0, 'vaccinated' => 0, 'fever' => 0, 'adults' => 0, 'international' => 0];
+    $previousQuery = "SELECT * FROM records WHERE 1=1 $previousCondition $quickCondition";
+    $previousResult = mysqli_query($conn, $previousQuery);
+    
     if ($previousResult) {
         while ($row = mysqli_fetch_assoc($previousResult)) {
             $previous['total']++;
@@ -171,10 +234,10 @@ function calculateTrendData($conn, $currentCondition, $previousCondition, $kpiCo
             }
             if (!$isFilipino) $previous['international']++;
         }
+        mysqli_free_result($previousResult);
+    } else {
+        logSecurityEvent('Previous period query failed: ' . mysqli_error($conn));
     }
-    
-    mysqli_stmt_close($currentStmt);
-    mysqli_stmt_close($previousStmt);
     
     return ['current' => $current, 'previous' => $previous];
 }
@@ -198,7 +261,7 @@ function getTrendIndicator($current, $previous) {
 }
 
 // Calculate trend data
-$trendData = calculateTrendData($conn, $currentCondition, $previousCondition, $kpiCondition);
+$trendData = calculateTrendData($conn, $currentCondition, $previousCondition, $kpiCondition, $quickCondition);
 
 // Extract current period data for display
 $totalRecords = $trendData['current']['total'];
@@ -267,7 +330,8 @@ $trends = [
                 data-range="<?php echo $timeRange; ?>"
                 role="button" 
                 tabindex="0"
-                aria-label="View all health records for <?php echo strtolower($rangeDisplayText); ?>"
+                aria-label="Total Records: <?php echo $totalRecords; ?> for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['total']['arrow']; ?> <?php echo $trends['total']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by all records."
+                aria-describedby="total-records-description"
                 title="Click to view all records. Trend shows change <?php echo strtolower($comparisonText); ?>.">
           <div class="status-grid-count"><?php echo $totalRecords; ?></div>
           <div class="status-grid-text">Total Records</div>
@@ -283,7 +347,8 @@ $trends = [
                 data-range="<?php echo $timeRange; ?>"
                 role="button" 
                 tabindex="0"
-                aria-label="View COVID encounter cases for <?php echo strtolower($rangeDisplayText); ?>"
+                aria-label="COVID Encounters: <?php echo $encounterYesCount; ?> cases for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['encountered']['arrow']; ?> <?php echo $trends['encountered']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by COVID encounters."
+                aria-describedby="encounters-description"
                 title="Click to filter COVID encounter cases. Trend shows change <?php echo strtolower($comparisonText); ?>.">
           <div class="status-grid-count"><?php echo $encounterYesCount; ?></div>
           <div class="status-grid-text">COVID Encounters</div>
@@ -299,7 +364,8 @@ $trends = [
                 data-range="<?php echo $timeRange; ?>"
                 role="button" 
                 tabindex="0"
-                aria-label="View vaccinated individuals for <?php echo strtolower($rangeDisplayText); ?>"
+                aria-label="Vaccinated: <?php echo $vaccinatedYesCount; ?> individuals for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['vaccinated']['arrow']; ?> <?php echo $trends['vaccinated']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by vaccinated individuals."
+                aria-describedby="vaccinated-description"
                 title="Click to filter vaccinated individuals. Trend shows change <?php echo strtolower($comparisonText); ?>.">
           <div class="status-grid-count"><?php echo $vaccinatedYesCount; ?></div>
           <div class="status-grid-text">Vaccinated</div>
@@ -315,7 +381,8 @@ $trends = [
                 data-range="<?php echo $timeRange; ?>"
                 role="button" 
                 tabindex="0"
-                aria-label="View high temperature cases for <?php echo strtolower($rangeDisplayText); ?>"
+                aria-label="High Temperature: <?php echo $feverCount; ?> cases above 37.5°C for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['fever']['arrow']; ?> <?php echo $trends['fever']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by fever cases."
+                aria-describedby="fever-description"
                 title="Click to filter high temperature cases (>37.5°C). Trend shows change <?php echo strtolower($comparisonText); ?>.">
           <div class="status-grid-count"><?php echo $feverCount; ?></div>
           <div class="status-grid-text">High Temperature</div>
@@ -331,7 +398,8 @@ $trends = [
                 data-range="<?php echo $timeRange; ?>"
                 role="button" 
                 tabindex="0"
-                aria-label="View adult records for <?php echo strtolower($rangeDisplayText); ?>"
+                aria-label="Adults: <?php echo $adultCount; ?> records for individuals 18 years and older for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['adults']['arrow']; ?> <?php echo $trends['adults']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by adult records."
+                aria-describedby="adults-description"
                 title="Click to filter adult records (18+). Trend shows change <?php echo strtolower($comparisonText); ?>.">
           <div class="status-grid-count"><?php echo $adultCount; ?></div>
           <div class="status-grid-text">Adults</div>
@@ -347,7 +415,8 @@ $trends = [
                 data-range="<?php echo $timeRange; ?>"
                 role="button" 
                 tabindex="0"
-                aria-label="View international visitor records for <?php echo strtolower($rangeDisplayText); ?>"
+                aria-label="International Visitors: <?php echo $foreignerCount; ?> records from non-Philippine visitors for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['international']['arrow']; ?> <?php echo $trends['international']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by international visitors."
+                aria-describedby="international-description"
                 title="Click to filter international visitor records. Trend shows change <?php echo strtolower($comparisonText); ?>.">
           <div class="status-grid-count"><?php echo $foreignerCount; ?></div>
           <div class="status-grid-text">International</div>
@@ -359,16 +428,88 @@ $trends = [
         </button>
       </div>
 
+      <!-- Quick Filter Chips -->
+      <div class="quick-filters" role="toolbar" aria-label="Quick filter options">
+        <div class="quick-filters-label" id="quick-filters-label">Quick filters:</div>
+        <div class="filter-chips" role="group" aria-labelledby="quick-filters-label">
+          <a href="?range=<?php echo $timeRange; ?>&quick=vaccinated<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?>" 
+             class="filter-chip <?php echo $quickFilter === 'vaccinated' ? 'active' : ''; ?>"
+             role="button"
+             tabindex="0"
+             aria-label="Filter by vaccinated individuals. <?php echo $quickFilter === 'vaccinated' ? 'Currently active.' : 'Press Enter to activate.'; ?>"
+             data-filter="vaccinated">
+            <i class="fa-solid fa-syringe" aria-hidden="true"></i>
+            Vaccinated
+          </a>
+          <a href="?range=<?php echo $timeRange; ?>&quick=encountered<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?>" 
+             class="filter-chip <?php echo $quickFilter === 'encountered' ? 'active' : ''; ?>"
+             role="button"
+             tabindex="0"
+             aria-label="Filter by COVID encounters. <?php echo $quickFilter === 'encountered' ? 'Currently active.' : 'Press Enter to activate.'; ?>"
+             data-filter="encountered">
+            <i class="fa-solid fa-handshake" aria-hidden="true"></i>
+            Encountered
+          </a>
+          <a href="?range=<?php echo $timeRange; ?>&quick=fever<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?>" 
+             class="filter-chip <?php echo $quickFilter === 'fever' ? 'active' : ''; ?>"
+             role="button"
+             tabindex="0"
+             aria-label="Filter by high temperature cases, 37.5 degrees celsius and above. <?php echo $quickFilter === 'fever' ? 'Currently active.' : 'Press Enter to activate.'; ?>"
+             data-filter="fever">
+            <i class="fa-solid fa-thermometer-half" aria-hidden="true"></i>
+            Temp ≥ 37.5°C
+          </a>
+          <a href="?range=<?php echo $timeRange; ?>&quick=today<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?>" 
+             class="filter-chip <?php echo $quickFilter === 'today' ? 'active' : ''; ?>"
+             role="button"
+             tabindex="0"
+             aria-label="Filter by today's records only. <?php echo $quickFilter === 'today' ? 'Currently active.' : 'Press Enter to activate.'; ?>"
+             data-filter="today">
+            <i class="fa-solid fa-calendar-day" aria-hidden="true"></i>
+            Today
+          </a>
+          <?php if (!empty($quickFilter)): ?>
+          <a href="?range=<?php echo $timeRange; ?><?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?>" 
+             class="filter-chip clear"
+             role="button"
+             tabindex="0"
+             aria-label="Clear quick filters and show all records">
+            <i class="fa-solid fa-times" aria-hidden="true"></i>
+            Clear
+          </a>
+          <?php endif; ?>
+        </div>
+      </div>
+
+      <!-- Hidden descriptions for screen readers -->
+      <div class="sr-only">
+        <div id="total-records-description">Shows the total number of health records for the selected time period with trend comparison.</div>
+        <div id="encounters-description">Shows records where individuals reported COVID-19 encounters with trend analysis.</div>
+        <div id="vaccinated-description">Shows records of vaccinated individuals with vaccination status trends.</div>
+        <div id="fever-description">Shows records with elevated temperature above 37.5 degrees Celsius indicating potential fever symptoms.</div>
+        <div id="adults-description">Shows health records for adults aged 18 years and older with demographic trends.</div>
+        <div id="international-description">Shows health records from international visitors and non-Philippine residents.</div>
+      </div>
+
       <!-- Clear Filters Section -->
-      <?php if (!empty($kpiFilter)): ?>
+      <?php if (!empty($kpiFilter) || !empty($quickFilter)): ?>
       <div class="active-filters-section">
         <div class="filter-indicator">
-          <i class="fa-solid fa-filter"></i>
-          <span>Filtered by: <strong><?php echo htmlspecialchars($filterDisplayText); ?></strong></span>
+          <i class="fa-solid fa-filter" aria-hidden="true"></i>
+          <span>Active filters: 
+            <?php if (!empty($kpiFilter)): ?>
+              <strong><?php echo htmlspecialchars($filterDisplayText); ?></strong>
+            <?php endif; ?>
+            <?php if (!empty($kpiFilter) && !empty($quickFilter)): ?>, <?php endif; ?>
+            <?php if (!empty($quickFilter)): ?>
+              <strong><?php echo htmlspecialchars($quickFilterDisplayText); ?></strong>
+            <?php endif; ?>
+          </span>
         </div>
-        <a href="?range=<?php echo $timeRange; ?>" class="clear-filters-btn" title="Clear all filters">
-          <i class="fa-solid fa-times"></i>
-          Clear Filters
+        <a href="?range=<?php echo $timeRange; ?>" class="clear-filters-btn" title="Clear all filters"
+           role="button" tabindex="0" aria-label="Clear all active filters and show all records">
+          <i class="fa-solid fa-times" aria-hidden="true"></i>
+          Clear All Filters
         </a>
       </div>
       <?php endif; ?>
@@ -429,8 +570,8 @@ $trends = [
           </thead>
           <tbody>
           <?php
-          // Fetch data for table display using prepared statement with date and KPI filtering
-          $table_query = "SELECT * FROM records WHERE 1=1 $currentCondition $kpiCondition ORDER BY id DESC";
+          // Fetch data for table display using prepared statement with all filtering
+          $table_query = "SELECT * FROM records WHERE 1=1 $currentCondition $kpiCondition $quickCondition ORDER BY id DESC";
           $table_stmt = mysqli_prepare($conn, $table_query);
           
           if ($table_stmt) {
@@ -534,62 +675,181 @@ $trends = [
 </main>
 
 <script>
-// Enhanced Dashboard Interactions with KPI Filtering
+// Enhanced Dashboard Interactions with KPI Filtering and Accessibility
 document.addEventListener('DOMContentLoaded', function() {
   // KPI tile click handlers
   const kpiTiles = document.querySelectorAll('.kpi-tile');
+  const filterChips = document.querySelectorAll('.filter-chip');
+  const loadingOverlay = document.getElementById('loadingOverlay');
   
-  kpiTiles.forEach(tile => {
-    tile.addEventListener('click', function() {
-      const filter = this.dataset.filter;
-      const range = this.dataset.range;
-      
-      // Build URL with filter and range
-      let url = '?range=' + range;
-      if (filter) {
-        url += '&filter=' + filter;
-      }
-      
-      // Add loading state
-      const loadingOverlay = document.getElementById('loadingOverlay');
-      this.classList.add('loading');
-      loadingOverlay.classList.add('active');
-      
-      // Navigate to filtered view
-      window.location.href = url;
-    });
-    
-    // Keyboard navigation for accessibility
+  // KPI Tiles with enhanced accessibility
+  kpiTiles.forEach((tile, index) => {
+    // Add keyboard support for KPI tiles
+    tile.addEventListener('click', handleKpiTileActivation);
     tile.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        this.click();
+        handleKpiTileActivation.call(this);
+      }
+      // Arrow key navigation
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const direction = e.key === 'ArrowRight' ? 1 : -1;
+        const nextIndex = (index + direction + kpiTiles.length) % kpiTiles.length;
+        kpiTiles[nextIndex].focus();
       }
     });
-  });
-  
-  // Add loading for navigation
-  const actionLinks = document.querySelectorAll('.action-btn[href]');
-  const loadingOverlay = document.getElementById('loadingOverlay');
-  
-  actionLinks.forEach(link => {
-    link.addEventListener('click', function() {
-      loadingOverlay.classList.add('active');
+    
+    // Add focus management
+    tile.addEventListener('focus', function() {
+      this.setAttribute('aria-expanded', 'true');
+    });
+    
+    tile.addEventListener('blur', function() {
+      this.setAttribute('aria-expanded', 'false');
     });
   });
   
-  // Simple confirmation for delete
+  function handleKpiTileActivation() {
+    const filter = this.dataset.filter;
+    const range = this.dataset.range;
+    
+    // Build URL with filter and range
+    let url = '?range=' + encodeURIComponent(range);
+    if (filter) {
+      url += '&filter=' + encodeURIComponent(filter);
+    }
+    
+    // Add loading state
+    this.classList.add('loading');
+    this.setAttribute('aria-busy', 'true');
+    if (loadingOverlay) {
+      loadingOverlay.classList.add('active');
+      loadingOverlay.setAttribute('aria-hidden', 'false');
+    }
+    
+    // Announce navigation to screen readers
+    announceToScreenReader(`Filtering records by ${this.textContent.trim()}. Loading...`);
+    
+    // Navigate to filtered view
+    window.location.href = url;
+  }
+  
+  // Filter chips with keyboard support
+  filterChips.forEach((chip, index) => {
+    chip.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        // Add loading state
+        if (loadingOverlay) {
+          loadingOverlay.classList.add('active');
+          loadingOverlay.setAttribute('aria-hidden', 'false');
+        }
+        this.setAttribute('aria-busy', 'true');
+        
+        // Announce action to screen readers
+        const filterType = this.textContent.trim();
+        announceToScreenReader(`Applying ${filterType} filter. Loading...`);
+        
+        // Navigate
+        window.location.href = this.href;
+      }
+      
+      // Arrow key navigation for filter chips
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const direction = e.key === 'ArrowRight' ? 1 : -1;
+        const nextIndex = (index + direction + filterChips.length) % filterChips.length;
+        filterChips[nextIndex].focus();
+      }
+    });
+    
+    // Click handler for mouse users
+    chip.addEventListener('click', function(e) {
+      if (loadingOverlay) {
+        loadingOverlay.classList.add('active');
+        loadingOverlay.setAttribute('aria-hidden', 'false');
+      }
+      this.setAttribute('aria-busy', 'true');
+    });
+  });
+  
+  // Add loading for other navigation elements
+  const actionLinks = document.querySelectorAll('.action-btn[href], .clear-filters-btn');
+  actionLinks.forEach(link => {
+    link.addEventListener('click', function() {
+      if (loadingOverlay) {
+        loadingOverlay.classList.add('active');
+        loadingOverlay.setAttribute('aria-hidden', 'false');
+      }
+    });
+    
+    // Keyboard support for clear filters button
+    if (link.classList.contains('clear-filters-btn')) {
+      link.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.click();
+        }
+      });
+    }
+  });
+  
+  // Enhanced delete confirmation with accessibility
   const deleteForms = document.querySelectorAll('form[action="./delete.php"]');
   deleteForms.forEach(form => {
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       
-      if (confirm('Are you sure you want to delete this record? This action cannot be undone.')) {
-        loadingOverlay.classList.add('active');
+      const recordName = this.closest('tr')?.querySelector('[data-cell="name"]')?.textContent || 'this record';
+      const confirmMessage = `Are you sure you want to delete ${recordName}? This action cannot be undone.`;
+      
+      if (confirm(confirmMessage)) {
+        if (loadingOverlay) {
+          loadingOverlay.classList.add('active');
+          loadingOverlay.setAttribute('aria-hidden', 'false');
+        }
+        announceToScreenReader('Deleting record...');
         this.submit();
       }
     });
   });
+  
+  // Screen reader announcements
+  function announceToScreenReader(message) {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
+    document.body.appendChild(announcement);
+    
+    // Remove after announcement
+    setTimeout(() => {
+      if (announcement.parentNode) {
+        announcement.parentNode.removeChild(announcement);
+      }
+    }, 1000);
+  }
+  
+  // Skip links functionality
+  function addSkipLinks() {
+    const skipLink = document.createElement('a');
+    skipLink.href = '#main-content';
+    skipLink.className = 'skip-link';
+    skipLink.textContent = 'Skip to main content';
+    skipLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      const mainContent = document.querySelector('#main-content, main, .table-container');
+      if (mainContent) {
+        mainContent.focus();
+        mainContent.scrollIntoView();
+      }
+    });
+    document.body.insertBefore(skipLink, document.body.firstChild);
+  }
+  
+  addSkipLinks();
   
   // Check if table needs horizontal scrolling
   const tableWrapper = document.querySelector('.table-wrapper');
@@ -600,15 +860,34 @@ document.addEventListener('DOMContentLoaded', function() {
       const needsScroll = tableWrapper.scrollWidth > tableWrapper.clientWidth;
       if (needsScroll) {
         tableContainer.classList.add('has-scroll');
+        tableContainer.setAttribute('aria-label', 'Scrollable table. Use left and right arrow keys to scroll horizontally.');
       } else {
         tableContainer.classList.remove('has-scroll');
+        tableContainer.removeAttribute('aria-label');
       }
     }
+  }
+  
+  // Initialize loading overlay attributes
+  if (loadingOverlay) {
+    loadingOverlay.setAttribute('aria-hidden', 'true');
+    loadingOverlay.setAttribute('aria-live', 'polite');
+    loadingOverlay.setAttribute('aria-atomic', 'true');
   }
   
   // Check on load and resize
   checkTableScroll();
   window.addEventListener('resize', checkTableScroll);
+  
+  // Focus management for better keyboard navigation
+  window.addEventListener('focus', function(e) {
+    // Ensure focused element is visible
+    if (e.target.scrollIntoViewIfNeeded) {
+      e.target.scrollIntoViewIfNeeded();
+    } else if (e.target.scrollIntoView) {
+      e.target.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }, true);
 });
 </script>
 </body>
