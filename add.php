@@ -107,8 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       
       error_log("Converted ENUM values - Diagnosed: '$diagnosed', Encounter: '$encounter', Vaccinated: '$vaccinated'");
       
-      // Insert data using prepared statement
-      $sql = "INSERT INTO records (email, full_name, gender, age, temp, diagnosed, encountered, vaccinated, nationality) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      // Insert data using prepared statement with created_at timestamp
+      $sql = "INSERT INTO records (email, full_name, gender, age, temp, diagnosed, encountered, vaccinated, nationality, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
       error_log("SQL Query: $sql");
       
       $stmt = mysqli_prepare($conn, $sql);

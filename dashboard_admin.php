@@ -12,13 +12,57 @@ if (!isValidSession()) {
     exit();
 }
 
-// Fetch data from the database using prepared statement
-$query = "SELECT * FROM records";
+// Handle time range filter
+$timeRange = $_GET['range'] ?? $_SESSION['dashboard_time_range'] ?? 'all';
+$validRanges = ['today', '7days', '30days', 'all'];
+if (!in_array($timeRange, $validRanges)) {
+    $timeRange = 'all';
+}
+
+// Store selected range in session
+$_SESSION['dashboard_time_range'] = $timeRange;
+
+// Build date condition for queries
+$dateCondition = '';
+$dateParams = [];
+$paramTypes = '';
+
+switch ($timeRange) {
+    case 'today':
+        $dateCondition = 'AND DATE(created_at) = CURDATE()';
+        break;
+    case '7days':
+        $dateCondition = 'AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)';
+        break;
+    case '30days':
+        $dateCondition = 'AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)';
+        break;
+    case 'all':
+    default:
+        $dateCondition = '';
+        break;
+}
+
+// Get range display text
+$rangeDisplayText = [
+    'today' => 'Today',
+    '7days' => 'Last 7 days',
+    '30days' => 'Last 30 days',
+    'all' => 'All time'
+][$timeRange];
+
+// Fetch data from the database using prepared statement with date filtering
+$query = "SELECT * FROM records WHERE 1=1 $dateCondition";
 $stmt = mysqli_prepare($conn, $query);
 
 if (!$stmt) {
     logSecurityEvent('Prepared statement failed in dashboard_admin.php: ' . mysqli_error($conn));
     die('Database preparation error');
+}
+
+// Bind parameters if needed
+if (!empty($dateParams)) {
+    mysqli_stmt_bind_param($stmt, $paramTypes, ...$dateParams);
 }
 
 mysqli_stmt_execute($stmt);
@@ -81,43 +125,78 @@ mysqli_stmt_close($stmt);
 <body>
   <main>
     <div class="wrapper">
-      <!-- Primary Action Section -->
+      <!-- Primary Action Section with Time Filter -->
       <div class="primary-action-section">
-        <h1 class="dashboard-title">
-          <i class="fa-solid fa-chart-line"></i>
-          Health Records Dashboard
-        </h1>
-        <a href="./add.php" class="primary-add-btn">
-          <i class="fa-solid fa-plus"></i>
-          Add New Record
-        </a>
+        <div class="dashboard-header-left">
+          <h1 class="dashboard-title">
+            <i class="fa-solid fa-chart-line"></i>
+            Health Records Dashboard
+          </h1>
+          <div class="active-range-indicator">
+            <i class="fa-solid fa-calendar-alt"></i>
+            <span>Showing data for: <strong><?php echo htmlspecialchars($rangeDisplayText); ?></strong></span>
+          </div>
+        </div>
+        <div class="dashboard-header-right">
+          <div class="time-range-filter">
+            <div class="filter-label">Time Range:</div>
+            <div class="filter-buttons">
+              <a href="?range=today" class="filter-btn <?php echo $timeRange === 'today' ? 'active' : ''; ?>" data-range="today">
+                <i class="fa-solid fa-calendar-day"></i>
+                Today
+              </a>
+              <a href="?range=7days" class="filter-btn <?php echo $timeRange === '7days' ? 'active' : ''; ?>" data-range="7days">
+                <i class="fa-solid fa-calendar-week"></i>
+                7 Days
+              </a>
+              <a href="?range=30days" class="filter-btn <?php echo $timeRange === '30days' ? 'active' : ''; ?>" data-range="30days">
+                <i class="fa-solid fa-calendar-alt"></i>
+                30 Days
+              </a>
+              <a href="?range=all" class="filter-btn <?php echo $timeRange === 'all' ? 'active' : ''; ?>" data-range="all">
+                <i class="fa-solid fa-infinity"></i>
+                All Time
+              </a>
+            </div>
+          </div>
+          <a href="./add.php" class="primary-add-btn">
+            <i class="fa-solid fa-plus"></i>
+            Add New Record
+          </a>
+        </div>
       </div>
 
-      <!-- Simple Status Grid -->
+      <!-- Enhanced Status Grid with Time Range Labels -->
       <div class="status status-grid">
         <div class="status-grid-item">
           <div class="status-grid-count"><?php echo $totalRecords; ?></div>
           <div class="status-grid-text">Total Records</div>
+          <div class="status-grid-period">· <?php echo $rangeDisplayText; ?></div>
         </div>
         <div class="status-grid-item">
           <div class="status-grid-count"><?php echo $encounterYesCount; ?></div>
           <div class="status-grid-text">COVID Encounters</div>
+          <div class="status-grid-period">· <?php echo $rangeDisplayText; ?></div>
         </div>
         <div class="status-grid-item">
           <div class="status-grid-count"><?php echo $vaccinatedYesCount; ?></div>
           <div class="status-grid-text">Vaccinated</div>
+          <div class="status-grid-period">· <?php echo $rangeDisplayText; ?></div>
         </div>
         <div class="status-grid-item">
           <div class="status-grid-count"><?php echo $feverCount; ?></div>
           <div class="status-grid-text">High Temperature</div>
+          <div class="status-grid-period">· <?php echo $rangeDisplayText; ?></div>
         </div>
         <div class="status-grid-item">
           <div class="status-grid-count"><?php echo $adultCount; ?></div>
           <div class="status-grid-text">Adults</div>
+          <div class="status-grid-period">· <?php echo $rangeDisplayText; ?></div>
         </div>
         <div class="status-grid-item">
           <div class="status-grid-count"><?php echo $foreignerCount; ?></div>
           <div class="status-grid-text">International</div>
+          <div class="status-grid-period">· <?php echo $rangeDisplayText; ?></div>
         </div>
       </div>
 
@@ -173,11 +252,15 @@ mysqli_stmt_close($stmt);
           </thead>
           <tbody>
           <?php
-          // Fetch data for table display using prepared statement
-          $table_query = "SELECT * FROM records";
+          // Fetch data for table display using prepared statement with date filtering
+          $table_query = "SELECT * FROM records WHERE 1=1 $dateCondition ORDER BY id DESC";
           $table_stmt = mysqli_prepare($conn, $table_query);
           
           if ($table_stmt) {
+            // Bind parameters if needed
+            if (!empty($dateParams)) {
+              mysqli_stmt_bind_param($table_stmt, $paramTypes, ...$dateParams);
+            }
             mysqli_stmt_execute($table_stmt);
             $table_result = mysqli_stmt_get_result($table_stmt);
 

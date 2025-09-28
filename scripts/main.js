@@ -213,7 +213,7 @@ class NavigationManager {
   }
 }
 
-// Dashboard Search Functionality
+// Dashboard Search Functionality with Time Range Support
 class DashboardSearchManager {
   constructor() {
     this.searchInput = document.getElementById("tableSearch");
@@ -221,10 +221,12 @@ class DashboardSearchManager {
     this.searchResults = document.getElementById("resultsCounter");
     this.dataTable = document.querySelector(".data-table tbody");
     this.emptyResults = document.querySelector(".empty-search-results");
+    this.filterButtons = document.querySelectorAll(".filter-btn");
 
     this.allRows = [];
     this.filteredRows = [];
     this.isSearching = false;
+    this.currentTimeRange = this.getCurrentTimeRange();
 
     this.init();
   }
@@ -236,7 +238,52 @@ class DashboardSearchManager {
 
     this.cacheTableRows();
     this.setupEventListeners();
+    this.setupTimeRangeFilters();
     this.updateResultsCount();
+  }
+
+  getCurrentTimeRange() {
+    const activeFilter = document.querySelector('.filter-btn.active');
+    return activeFilter ? activeFilter.getAttribute('data-range') : 'all';
+  }
+
+  setupTimeRangeFilters() {
+    this.filterButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.handleTimeRangeChange(button);
+      });
+    });
+  }
+
+  handleTimeRangeChange(clickedButton) {
+    const newRange = clickedButton.getAttribute('data-range');
+    
+    // Add loading state
+    this.showLoadingState();
+    
+    // Update active state immediately for better UX
+    this.filterButtons.forEach(btn => btn.classList.remove('active'));
+    clickedButton.classList.add('active');
+    
+    // Simulate loading delay for smooth transition
+    setTimeout(() => {
+      // Navigate to new range
+      window.location.href = `?range=${newRange}`;
+    }, 200);
+  }
+
+  showLoadingState() {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) {
+      loadingOverlay.classList.add('active');
+    }
+    
+    // Add loading class to filter buttons
+    this.filterButtons.forEach(btn => {
+      btn.style.pointerEvents = 'none';
+      btn.style.opacity = '0.6';
+    });
   }
 
   cacheTableRows() {
@@ -369,6 +416,73 @@ class DashboardSearchManager {
   }
 }
 
+// Time Range Filter Manager
+class TimeRangeFilterManager {
+  constructor() {
+    this.filterButtons = document.querySelectorAll('.filter-btn');
+    this.statusGridItems = document.querySelectorAll('.status-grid-item');
+    this.activeRangeIndicator = document.querySelector('.active-range-indicator strong');
+    
+    this.init();
+  }
+
+  init() {
+    this.setupFilterAnimations();
+    this.setupKeyboardNavigation();
+  }
+
+  setupFilterAnimations() {
+    this.filterButtons.forEach((button, index) => {
+      // Add staggered animation on load
+      button.style.animationDelay = `${index * 0.1}s`;
+      button.classList.add('filter-btn-animate');
+
+      // Enhanced hover effects
+      button.addEventListener('mouseenter', () => {
+        this.addHoverEffect(button);
+      });
+
+      button.addEventListener('mouseleave', () => {
+        this.removeHoverEffect(button);
+      });
+    });
+
+    // Animate status grid items
+    this.statusGridItems.forEach((item, index) => {
+      item.style.animationDelay = `${index * 0.1 + 0.2}s`;
+      item.classList.add('status-grid-animate');
+    });
+  }
+
+  setupKeyboardNavigation() {
+    this.filterButtons.forEach((button, index) => {
+      button.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const direction = e.key === 'ArrowRight' ? 1 : -1;
+          const nextIndex = (index + direction + this.filterButtons.length) % this.filterButtons.length;
+          this.filterButtons[nextIndex].focus();
+        } else if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          button.click();
+        }
+      });
+    });
+  }
+
+  addHoverEffect(button) {
+    if (!button.classList.contains('active')) {
+      button.style.transform = 'translateY(-2px) scale(1.02)';
+    }
+  }
+
+  removeHoverEffect(button) {
+    if (!button.classList.contains('active')) {
+      button.style.transform = 'translateY(-1px) scale(1)';
+    }
+  }
+}
+
 // Page Loading Indicator
 class LoadingManager {
   constructor() {
@@ -488,6 +602,9 @@ function AddTableARIA() {
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize navigation
   const navManager = new NavigationManager();
+
+  // Initialize time range filter manager
+  const timeRangeManager = new TimeRangeFilterManager();
 
   // Initialize search functionality if on dashboard page
   if (document.getElementById("tableSearch")) {
