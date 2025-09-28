@@ -192,8 +192,6 @@ if ($recent_stmt) {
 
 ?>
 <?php include "./header.php"; ?>
-
-<body>
   <main>
     <div class="wrapper">
       <!-- Profile Header -->
@@ -497,6 +495,13 @@ if ($recent_stmt) {
       });
     });
   </script>
+</main>
 </body>
 
 </html>
+<?php
+// Clean up any open database connections
+if (isset($conn) && $conn) {
+    mysqli_close($conn);
+}
+?>
