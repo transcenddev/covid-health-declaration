@@ -483,24 +483,16 @@ body {
   overflow-y: visible;
 }
 
-/* Custom scrollbar for table */
+/* Hide scrollbar for table */
 .table-wrapper::-webkit-scrollbar {
-  height: 8px;
+  display: none;
 }
 
-.table-wrapper::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb {
-  background: var(--clr-complementary);
-  border-radius: 4px;
-  transition: var(--transition);
-}
-
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #0891b2;
+.table-wrapper {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* Dark Theme Table Styling */

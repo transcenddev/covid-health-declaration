@@ -78,6 +78,7 @@ if ($is_guest) {
   <link rel="stylesheet" href="./styles/dasboard-admin.css?v=5" />
   <link rel="stylesheet" href="./styles/index.css?v=5">
   <link rel="stylesheet" href="./styles/add.css?v=5">
+  <link rel="stylesheet" href="./styles/profile.css?v=1">
   <?php endif; ?>
   <!-- <link rel="stylesheet" href="./styles/freemium.css?v=1"> TEMPORARILY DISABLED -->
   <link rel="stylesheet" href="./styles/about.css?v=5">
