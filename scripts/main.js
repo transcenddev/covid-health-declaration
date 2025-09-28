@@ -243,13 +243,13 @@ class DashboardSearchManager {
   }
 
   getCurrentTimeRange() {
-    const activeFilter = document.querySelector('.filter-btn.active');
-    return activeFilter ? activeFilter.getAttribute('data-range') : 'all';
+    const activeFilter = document.querySelector(".filter-btn.active");
+    return activeFilter ? activeFilter.getAttribute("data-range") : "all";
   }
 
   setupTimeRangeFilters() {
-    this.filterButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
+    this.filterButtons.forEach((button) => {
+      button.addEventListener("click", (e) => {
         e.preventDefault();
         this.handleTimeRangeChange(button);
       });
@@ -257,15 +257,15 @@ class DashboardSearchManager {
   }
 
   handleTimeRangeChange(clickedButton) {
-    const newRange = clickedButton.getAttribute('data-range');
-    
+    const newRange = clickedButton.getAttribute("data-range");
+
     // Add loading state
     this.showLoadingState();
-    
+
     // Update active state immediately for better UX
-    this.filterButtons.forEach(btn => btn.classList.remove('active'));
-    clickedButton.classList.add('active');
-    
+    this.filterButtons.forEach((btn) => btn.classList.remove("active"));
+    clickedButton.classList.add("active");
+
     // Simulate loading delay for smooth transition
     setTimeout(() => {
       // Navigate to new range
@@ -274,15 +274,15 @@ class DashboardSearchManager {
   }
 
   showLoadingState() {
-    const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingOverlay = document.getElementById("loadingOverlay");
     if (loadingOverlay) {
-      loadingOverlay.classList.add('active');
+      loadingOverlay.classList.add("active");
     }
-    
+
     // Add loading class to filter buttons
-    this.filterButtons.forEach(btn => {
-      btn.style.pointerEvents = 'none';
-      btn.style.opacity = '0.6';
+    this.filterButtons.forEach((btn) => {
+      btn.style.pointerEvents = "none";
+      btn.style.opacity = "0.6";
     });
   }
 
@@ -419,10 +419,12 @@ class DashboardSearchManager {
 // Time Range Filter Manager
 class TimeRangeFilterManager {
   constructor() {
-    this.filterButtons = document.querySelectorAll('.filter-btn');
-    this.statusGridItems = document.querySelectorAll('.status-grid-item');
-    this.activeRangeIndicator = document.querySelector('.active-range-indicator strong');
-    
+    this.filterButtons = document.querySelectorAll(".filter-btn");
+    this.statusGridItems = document.querySelectorAll(".status-grid-item");
+    this.activeRangeIndicator = document.querySelector(
+      ".active-range-indicator strong"
+    );
+
     this.init();
   }
 
@@ -435,14 +437,14 @@ class TimeRangeFilterManager {
     this.filterButtons.forEach((button, index) => {
       // Add staggered animation on load
       button.style.animationDelay = `${index * 0.1}s`;
-      button.classList.add('filter-btn-animate');
+      button.classList.add("filter-btn-animate");
 
       // Enhanced hover effects
-      button.addEventListener('mouseenter', () => {
+      button.addEventListener("mouseenter", () => {
         this.addHoverEffect(button);
       });
 
-      button.addEventListener('mouseleave', () => {
+      button.addEventListener("mouseleave", () => {
         this.removeHoverEffect(button);
       });
     });
@@ -450,19 +452,21 @@ class TimeRangeFilterManager {
     // Animate status grid items
     this.statusGridItems.forEach((item, index) => {
       item.style.animationDelay = `${index * 0.1 + 0.2}s`;
-      item.classList.add('status-grid-animate');
+      item.classList.add("status-grid-animate");
     });
   }
 
   setupKeyboardNavigation() {
     this.filterButtons.forEach((button, index) => {
-      button.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      button.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
           e.preventDefault();
-          const direction = e.key === 'ArrowRight' ? 1 : -1;
-          const nextIndex = (index + direction + this.filterButtons.length) % this.filterButtons.length;
+          const direction = e.key === "ArrowRight" ? 1 : -1;
+          const nextIndex =
+            (index + direction + this.filterButtons.length) %
+            this.filterButtons.length;
           this.filterButtons[nextIndex].focus();
-        } else if (e.key === 'Enter' || e.key === ' ') {
+        } else if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           button.click();
         }
@@ -471,14 +475,14 @@ class TimeRangeFilterManager {
   }
 
   addHoverEffect(button) {
-    if (!button.classList.contains('active')) {
-      button.style.transform = 'translateY(-2px) scale(1.02)';
+    if (!button.classList.contains("active")) {
+      button.style.transform = "translateY(-2px) scale(1.02)";
     }
   }
 
   removeHoverEffect(button) {
-    if (!button.classList.contains('active')) {
-      button.style.transform = 'translateY(-1px) scale(1)';
+    if (!button.classList.contains("active")) {
+      button.style.transform = "translateY(-1px) scale(1)";
     }
   }
 }

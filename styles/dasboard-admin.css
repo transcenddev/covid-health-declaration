@@ -284,6 +284,7 @@ body {
     opacity: 0;
     transform: translateX(20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -534,6 +535,7 @@ body {
   gap: 2rem;
   backdrop-filter: blur(10px);
   border-radius: var(--border-radius) var(--border-radius) 0 0;
+  flex-wrap: wrap;
 }
 
 .table-header-left {
@@ -543,6 +545,10 @@ body {
 
 .table-header-right {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .table-title {
@@ -577,6 +583,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 .search-input-wrapper {
@@ -1164,12 +1171,24 @@ tbody td[data-cell="actions"] {
 
   .table-header-right {
     width: 100%;
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .search-container {
     flex-direction: column;
     gap: 1rem;
     align-items: stretch;
+    order: 2;
+  }
+
+  .primary-add-btn {
+    order: 1;
+    align-self: center;
+    min-width: 200px;
+    justify-content: center;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
   }
 
   .search-input-wrapper {

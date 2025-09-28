@@ -171,10 +171,6 @@ mysqli_stmt_close($stmt);
               </a>
             </div>
           </div>
-          <a href="./add.php" class="primary-add-btn">
-            <i class="fa-solid fa-plus"></i>
-            Add New Record
-          </a>
         </div>
       </div>
 
@@ -243,6 +239,10 @@ mysqli_stmt_close($stmt);
                 </button>
               </div>
             </div>
+            <a href="./add.php" class="primary-add-btn">
+              <i class="fa-solid fa-plus"></i>
+              Add New Record
+            </a>
           </div>
         </div>
         
