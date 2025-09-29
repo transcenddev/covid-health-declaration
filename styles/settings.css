@@ -186,7 +186,8 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1.25rem 1.5rem;
+  padding: 1.25rem 2rem;
+  /* Increased horizontal padding for better spacing */
   background: transparent;
   border: none;
   color: rgba(255, 255, 255, 0.7);
@@ -197,6 +198,10 @@
   white-space: nowrap;
   border-bottom: 3px solid transparent;
   position: relative;
+  flex: 1;
+  /* Distribute tabs evenly across full width */
+  justify-content: center;
+  /* Center tab content */
 }
 
 .tab-btn:hover {
@@ -226,7 +231,11 @@
 
 /* Settings Sections */
 .settings-section {
-  max-width: 800px;
+  width: 100%;
+  max-width: none;
+  /* Full desktop width for better space utilization */
+  padding: 0;
+  /* Remove any internal padding constraints */
 }
 
 .section-header {
