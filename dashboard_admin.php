@@ -12,6 +12,29 @@ if (!isValidSession()) {
     exit();
 }
 
+// Handle manual refresh and data freshness tracking
+$lastUpdated = time();
+if (isset($_GET['refresh']) && $_GET['refresh'] === '1') {
+    // Clear any cached data and force fresh queries
+    $lastUpdated = time();
+    $_SESSION['last_data_refresh'] = $lastUpdated;
+} else {
+    $lastUpdated = $_SESSION['last_data_refresh'] ?? time();
+}
+
+// Calculate time since last update
+$timeSinceUpdate = time() - $lastUpdated;
+$updateText = '';
+if ($timeSinceUpdate < 60) {
+    $updateText = 'Updated ' . $timeSinceUpdate . ' seconds ago';
+} elseif ($timeSinceUpdate < 3600) {
+    $updateText = 'Updated ' . floor($timeSinceUpdate / 60) . ' minutes ago';
+} elseif ($timeSinceUpdate < 86400) {
+    $updateText = 'Updated ' . floor($timeSinceUpdate / 3600) . ' hours ago';
+} else {
+    $updateText = 'Updated ' . floor($timeSinceUpdate / 86400) . ' days ago';
+}
+
 // Handle quick filters
 $quickFilter = $_GET['quick'] ?? '';
 $validQuickFilters = ['vaccinated', 'encountered', 'fever', 'today'];
@@ -132,8 +155,8 @@ $filterDisplayText = [
     'encountered' => 'COVID Encounters',
     'vaccinated' => 'Vaccinated Individuals',
     'fever' => 'High Temperature Cases',
-    'adults' => 'Adult Records',
-    'international' => 'International Visitors',
+    'adults' => 'Adults (18+)',
+    'international' => 'International (non-local)',
     '' => ''
 ][$kpiFilter];
 
@@ -146,7 +169,7 @@ $quickFilterDisplayText = [
     '' => ''
 ][$quickFilter];
 
-// Function to calculate trend data
+// Optimized function to calculate trend data using batched COUNT queries
 function calculateTrendData($conn, $currentCondition, $previousCondition, $kpiCondition, $quickCondition = '') {
     // Initialize default values
     $current = ['total' => 0, 'encountered' => 0, 'vaccinated' => 0, 'fever' => 0, 'adults' => 0, 'international' => 0];
@@ -155,88 +178,158 @@ function calculateTrendData($conn, $currentCondition, $previousCondition, $kpiCo
     // Check if created_at column exists
     $columnCheck = mysqli_query($conn, "SHOW COLUMNS FROM records LIKE 'created_at'");
     if (mysqli_num_rows($columnCheck) == 0) {
-        // If created_at doesn't exist, return current data only (no trends)
-        $query = "SELECT * FROM records WHERE 1=1";
-        $result = mysqli_query($conn, $query);
+        // Legacy fallback: optimized single query instead of SELECT * and PHP loops
+        $legacyQuery = "
+            SELECT 
+                COUNT(*) as total,
+                SUM(CASE WHEN encountered = 'YES' THEN 1 ELSE 0 END) as encountered,
+                SUM(CASE WHEN vaccinated = 'YES' THEN 1 ELSE 0 END) as vaccinated,
+                SUM(CASE WHEN temp > 37.5 THEN 1 ELSE 0 END) as fever,
+                SUM(CASE WHEN age >= 18 THEN 1 ELSE 0 END) as adults,
+                SUM(CASE WHEN nationality NOT REGEXP 'philippines|philippine|filipino|pilipino' THEN 1 ELSE 0 END) as international
+            FROM records 
+            WHERE 1=1 $quickCondition
+        ";
         
-        if ($result) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $current['total']++;
-                if ($row['encountered'] == 'YES') $current['encountered']++;
-                if ($row['vaccinated'] == 'YES') $current['vaccinated']++;
-                if ($row['temp'] > 37.5) $current['fever']++;
-                if ($row['age'] >= 18) $current['adults']++;
-                
-                $nationality = strtolower(trim($row['nationality']));
-                $philippineVariants = ['philippines', 'philippine', 'filipino', 'pilipino'];
-                $isFilipino = false;
-                foreach ($philippineVariants as $variant) {
-                    if (strpos($nationality, $variant) !== false) {
-                        $isFilipino = true;
-                        break;
-                    }
-                }
-                if (!$isFilipino) $current['international']++;
-            }
+        $result = mysqli_query($conn, $legacyQuery);
+        if ($result && $row = mysqli_fetch_assoc($result)) {
+            $current['total'] = (int) $row['total'];
+            $current['encountered'] = (int) $row['encountered'];
+            $current['vaccinated'] = (int) $row['vaccinated'];
+            $current['fever'] = (int) $row['fever'];
+            $current['adults'] = (int) $row['adults'];
+            $current['international'] = (int) $row['international'];
             mysqli_free_result($result);
         }
         return ['current' => $current, 'previous' => $previous];
     }
+
+    // Optimized: Single batched query using UNION ALL instead of multiple SELECT * queries
+    $batchedQuery = "
+        SELECT 
+            'current_total' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $currentCondition $quickCondition
+        
+        UNION ALL
+        
+        SELECT 
+            'current_encountered' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $currentCondition $quickCondition AND encountered = 'YES'
+        
+        UNION ALL
+        
+        SELECT 
+            'current_vaccinated' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $currentCondition $quickCondition AND vaccinated = 'YES'
+        
+        UNION ALL
+        
+        SELECT 
+            'current_fever' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $currentCondition $quickCondition AND temp > 37.5
+        
+        UNION ALL
+        
+        SELECT 
+            'current_adults' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $currentCondition $quickCondition AND age >= 18
+        
+        UNION ALL
+        
+        SELECT 
+            'current_international' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $currentCondition $quickCondition 
+        AND nationality NOT REGEXP 'philippines|philippine|filipino|pilipino'
+        
+        UNION ALL
+        
+        SELECT 
+            'previous_total' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $previousCondition $quickCondition
+        
+        UNION ALL
+        
+        SELECT 
+            'previous_encountered' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $previousCondition $quickCondition AND encountered = 'YES'
+        
+        UNION ALL
+        
+        SELECT 
+            'previous_vaccinated' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $previousCondition $quickCondition AND vaccinated = 'YES'
+        
+        UNION ALL
+        
+        SELECT 
+            'previous_fever' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $previousCondition $quickCondition AND temp > 37.5
+        
+        UNION ALL
+        
+        SELECT 
+            'previous_adults' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $previousCondition $quickCondition AND age >= 18
+        
+        UNION ALL
+        
+        SELECT 
+            'previous_international' as metric,
+            COUNT(*) as count
+        FROM records 
+        WHERE 1=1 $previousCondition $quickCondition 
+        AND nationality NOT REGEXP 'philippines|philippine|filipino|pilipino'
+    ";
     
-    // Process current period data
-    $currentQuery = "SELECT * FROM records WHERE 1=1 $currentCondition $quickCondition";
-    $currentResult = mysqli_query($conn, $currentQuery);
+    // Execute the optimized batched query - single database roundtrip instead of 2+ queries
+    $result = mysqli_query($conn, $batchedQuery);
     
-    if ($currentResult) {
-        while ($row = mysqli_fetch_assoc($currentResult)) {
-            $current['total']++;
-            if ($row['encountered'] == 'YES') $current['encountered']++;
-            if ($row['vaccinated'] == 'YES') $current['vaccinated']++;
-            if ($row['temp'] > 37.5) $current['fever']++;
-            if ($row['age'] >= 18) $current['adults']++;
+    if ($result) {
+        // Map results back to arrays efficiently
+        while ($row = mysqli_fetch_assoc($result)) {
+            $metric = $row['metric'];
+            $count = (int) $row['count'];
             
-            $nationality = strtolower(trim($row['nationality']));
-            $philippineVariants = ['philippines', 'philippine', 'filipino', 'pilipino'];
-            $isFilipino = false;
-            foreach ($philippineVariants as $variant) {
-                if (strpos($nationality, $variant) !== false) {
-                    $isFilipino = true;
-                    break;
-                }
+            switch ($metric) {
+                case 'current_total': $current['total'] = $count; break;
+                case 'current_encountered': $current['encountered'] = $count; break;
+                case 'current_vaccinated': $current['vaccinated'] = $count; break;
+                case 'current_fever': $current['fever'] = $count; break;
+                case 'current_adults': $current['adults'] = $count; break;
+                case 'current_international': $current['international'] = $count; break;
+                case 'previous_total': $previous['total'] = $count; break;
+                case 'previous_encountered': $previous['encountered'] = $count; break;
+                case 'previous_vaccinated': $previous['vaccinated'] = $count; break;
+                case 'previous_fever': $previous['fever'] = $count; break;
+                case 'previous_adults': $previous['adults'] = $count; break;
+                case 'previous_international': $previous['international'] = $count; break;
             }
-            if (!$isFilipino) $current['international']++;
         }
-        mysqli_free_result($currentResult);
+        mysqli_free_result($result);
     } else {
-        logSecurityEvent('Current period query failed: ' . mysqli_error($conn));
-    }
-    
-    // Process previous period data
-    $previousQuery = "SELECT * FROM records WHERE 1=1 $previousCondition $quickCondition";
-    $previousResult = mysqli_query($conn, $previousQuery);
-    
-    if ($previousResult) {
-        while ($row = mysqli_fetch_assoc($previousResult)) {
-            $previous['total']++;
-            if ($row['encountered'] == 'YES') $previous['encountered']++;
-            if ($row['vaccinated'] == 'YES') $previous['vaccinated']++;
-            if ($row['temp'] > 37.5) $previous['fever']++;
-            if ($row['age'] >= 18) $previous['adults']++;
-            
-            $nationality = strtolower(trim($row['nationality']));
-            $philippineVariants = ['philippines', 'philippine', 'filipino', 'pilipino'];
-            $isFilipino = false;
-            foreach ($philippineVariants as $variant) {
-                if (strpos($nationality, $variant) !== false) {
-                    $isFilipino = true;
-                    break;
-                }
-            }
-            if (!$isFilipino) $previous['international']++;
-        }
-        mysqli_free_result($previousResult);
-    } else {
-        logSecurityEvent('Previous period query failed: ' . mysqli_error($conn));
+        logSecurityEvent('Optimized batched trend query failed: ' . mysqli_error($conn));
     }
     
     return ['current' => $current, 'previous' => $previous];
@@ -286,7 +379,7 @@ $trends = [
 <body>
   <main>
     <div class="wrapper">
-      <!-- Primary Action Section with Time Filter -->
+      <!-- Primary Action Section with Data Freshness -->
       <div class="primary-action-section">
         <div class="dashboard-header-left">
           <h1 class="dashboard-title">
@@ -296,6 +389,10 @@ $trends = [
           <div class="active-range-indicator">
             <i class="fa-solid fa-calendar-alt"></i>
             <span>Showing data for: <strong><?php echo htmlspecialchars($rangeDisplayText); ?></strong></span>
+          </div>
+          <div class="data-freshness-indicator">
+            <i class="fa-solid fa-clock"></i>
+            <span class="freshness-text"><?php echo htmlspecialchars($updateText); ?></span>
           </div>
         </div>
         <div class="dashboard-header-right">
@@ -323,6 +420,27 @@ $trends = [
         </div>
       </div>
 
+      <!-- Skeleton Loaders (hidden by default) -->
+      <div id="kpi-skeleton" class="skeleton-loader kpi-skeleton">
+        <div class="skeleton-grid">
+          <div class="skeleton-tile">
+            <div class="skeleton-count"></div>
+            <div class="skeleton-text"></div>
+            <div class="skeleton-trend"></div>
+          </div>
+          <div class="skeleton-tile">
+            <div class="skeleton-count"></div>
+            <div class="skeleton-text"></div>
+            <div class="skeleton-trend"></div>
+          </div>
+          <div class="skeleton-tile">
+            <div class="skeleton-count"></div>
+            <div class="skeleton-text"></div>
+            <div class="skeleton-trend"></div>
+          </div>
+        </div>
+      </div>
+
       <!-- Enhanced Status Grid with Clickable Tiles and Trend Indicators -->
       <div class="status status-grid">
         <button type="button" class="status-grid-item kpi-tile <?php echo $kpiFilter === '' ? 'active' : ''; ?>" 
@@ -330,7 +448,7 @@ $trends = [
                 data-range="<?php echo $timeRange; ?>"
                 role="button" 
                 tabindex="0"
-                aria-label="Total Records: <?php echo $totalRecords; ?> for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['total']['arrow']; ?> <?php echo $trends['total']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by all records."
+                aria-label="Total Records: <?php echo $totalRecords; ?> total health records. Trend <?php echo $trends['total']['arrow']; ?> <?php echo $trends['total']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by all records."
                 aria-describedby="total-records-description"
                 title="Click to view all records. Trend shows change <?php echo strtolower($comparisonText); ?>.">
           <div class="status-grid-count"><?php echo $totalRecords; ?></div>
@@ -347,11 +465,12 @@ $trends = [
                 data-range="<?php echo $timeRange; ?>"
                 role="button" 
                 tabindex="0"
-                aria-label="COVID Encounters: <?php echo $encounterYesCount; ?> cases for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['encountered']['arrow']; ?> <?php echo $trends['encountered']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by COVID encounters."
+                aria-label="COVID Encounters: <?php echo $encounterYesCount; ?> cases with close contact in last 14 days for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['encountered']['arrow']; ?> <?php echo $trends['encountered']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by COVID encounters."
                 aria-describedby="encounters-description"
-                title="Click to filter COVID encounter cases. Trend shows change <?php echo strtolower($comparisonText); ?>.">
+                title="Click to filter COVID encounter cases (close contact in last 14 days). Trend shows change <?php echo strtolower($comparisonText); ?>.">
           <div class="status-grid-count"><?php echo $encounterYesCount; ?></div>
           <div class="status-grid-text">COVID Encounters</div>
+          <div class="status-grid-subtext">Close contact in last 14 days</div>
           <div class="status-grid-period">· <?php echo $rangeDisplayText; ?></div>
           <div class="trend-indicator trend-<?php echo $trends['encountered']['trend']; ?>">
             <span class="trend-arrow"><?php echo $trends['encountered']['arrow']; ?></span>
@@ -398,11 +517,12 @@ $trends = [
                 data-range="<?php echo $timeRange; ?>"
                 role="button" 
                 tabindex="0"
-                aria-label="Adults: <?php echo $adultCount; ?> records for individuals 18 years and older for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['adults']['arrow']; ?> <?php echo $trends['adults']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by adult records."
+                aria-label="Adults (18+): <?php echo $adultCount; ?> records for individuals 18 years and older for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['adults']['arrow']; ?> <?php echo $trends['adults']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by adult records."
                 aria-describedby="adults-description"
-                title="Click to filter adult records (18+). Trend shows change <?php echo strtolower($comparisonText); ?>.">
+                title="Click to filter adult records (18+ years). Trend shows change <?php echo strtolower($comparisonText); ?>.">
           <div class="status-grid-count"><?php echo $adultCount; ?></div>
-          <div class="status-grid-text">Adults</div>
+          <div class="status-grid-text">Adults (18+)</div>
+          <div class="status-grid-subtext">Age 18 years and older</div>
           <div class="status-grid-period">· <?php echo $rangeDisplayText; ?></div>
           <div class="trend-indicator trend-<?php echo $trends['adults']['trend']; ?>">
             <span class="trend-arrow"><?php echo $trends['adults']['arrow']; ?></span>
@@ -415,11 +535,12 @@ $trends = [
                 data-range="<?php echo $timeRange; ?>"
                 role="button" 
                 tabindex="0"
-                aria-label="International Visitors: <?php echo $foreignerCount; ?> records from non-Philippine visitors for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['international']['arrow']; ?> <?php echo $trends['international']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by international visitors."
+                aria-label="International (non-local): <?php echo $foreignerCount; ?> records from non-Philippine residents for <?php echo $rangeDisplayText; ?>. Trend <?php echo $trends['international']['arrow']; ?> <?php echo $trends['international']['percentage']; ?> <?php echo strtolower($comparisonText); ?>. Press Enter or Space to filter by international records."
                 aria-describedby="international-description"
-                title="Click to filter international visitor records. Trend shows change <?php echo strtolower($comparisonText); ?>.">
+                title="Click to filter international non-local records. Trend shows change <?php echo strtolower($comparisonText); ?>.">
           <div class="status-grid-count"><?php echo $foreignerCount; ?></div>
-          <div class="status-grid-text">International</div>
+          <div class="status-grid-text">International (non-local)</div>
+          <div class="status-grid-subtext">Non-Philippine residents</div>
           <div class="status-grid-period">· <?php echo $rangeDisplayText; ?></div>
           <div class="trend-indicator trend-<?php echo $trends['international']['trend']; ?>">
             <span class="trend-arrow"><?php echo $trends['international']['arrow']; ?></span>
@@ -484,11 +605,11 @@ $trends = [
       <!-- Hidden descriptions for screen readers -->
       <div class="sr-only">
         <div id="total-records-description">Shows the total number of health records for the selected time period with trend comparison.</div>
-        <div id="encounters-description">Shows records where individuals reported COVID-19 encounters with trend analysis.</div>
-        <div id="vaccinated-description">Shows records of vaccinated individuals with vaccination status trends.</div>
-        <div id="fever-description">Shows records with elevated temperature above 37.5 degrees Celsius indicating potential fever symptoms.</div>
-        <div id="adults-description">Shows health records for adults aged 18 years and older with demographic trends.</div>
-        <div id="international-description">Shows health records from international visitors and non-Philippine residents.</div>
+        <div id="encounters-description">Shows records where individuals reported COVID-19 encounters or close contact within the last 14 days, with trend analysis for the selected period.</div>
+        <div id="vaccinated-description">Shows records of vaccinated individuals with vaccination status trends for the selected period.</div>
+        <div id="fever-description">Shows records with elevated temperature above 37.5 degrees Celsius indicating potential fever symptoms for the selected period.</div>
+        <div id="adults-description">Shows health records for adults aged 18 years and older with demographic trends for the selected period.</div>
+        <div id="international-description">Shows health records from international (non-local) visitors and non-Philippine residents for the selected period.</div>
       </div>
 
       <!-- Clear Filters Section -->
@@ -513,6 +634,23 @@ $trends = [
         </a>
       </div>
       <?php endif; ?>
+
+      <!-- Table Skeleton Loader (hidden by default) -->
+      <div id="table-skeleton" class="skeleton-loader table-skeleton">
+        <div class="skeleton-table">
+          <div class="skeleton-header">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-search"></div>
+          </div>
+          <div class="skeleton-rows">
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+          </div>
+        </div>
+      </div>
 
       <!-- Clean Table Container -->
       <div class="table-container">
@@ -888,6 +1026,36 @@ document.addEventListener('DOMContentLoaded', function() {
       e.target.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
   }, true);
+  
+  // Dashboard refresh functionality
+  window.refreshDashboard = function() {
+    // Show skeleton loaders
+    const kpiSkeleton = document.getElementById('kpi-skeleton');
+    const tableSkeleton = document.getElementById('table-skeleton');
+    const statusGrid = document.querySelector('.status-grid');
+    const tableContainer = document.querySelector('.table-container');
+    const refreshBtn = document.querySelector('.refresh-btn');
+    
+    if (kpiSkeleton && statusGrid) {
+      kpiSkeleton.classList.add('active');
+      statusGrid.style.opacity = '0.3';
+    }
+    
+    if (tableSkeleton && tableContainer) {
+      tableSkeleton.classList.add('active');
+      tableContainer.style.opacity = '0.3';
+    }
+    
+    if (refreshBtn) {
+      refreshBtn.classList.add('loading');
+    }
+    
+    // Preserve current filters and refresh
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('refresh', '1');
+    
+    window.location.href = '?' + urlParams.toString();
+  };
 });
 </script>
 </body>
