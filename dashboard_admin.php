@@ -373,11 +373,71 @@ $trends = [
     'adults' => getTrendIndicator($trendData['current']['adults'], $trendData['previous']['adults']),
     'international' => getTrendIndicator($trendData['current']['international'], $trendData['previous']['international'])
 ];
+
+// Debug output (remove in production)
+if (isset($_GET['debug'])) {
+    echo "<!-- DEBUG INFO:\n";
+    echo "Time Range: " . htmlspecialchars($timeRange) . "\n";
+    echo "KPI Filter: " . htmlspecialchars($kpiFilter) . "\n";
+    echo "Quick Filter: " . htmlspecialchars($quickFilter) . "\n";
+    echo "Current Condition: " . htmlspecialchars($currentCondition) . "\n";
+    echo "Total Records: " . $totalRecords . "\n";
+    echo "URL Parameters: " . print_r($_GET, true) . "\n";
+    echo "-->\n";
+}
 ?>
 <?php include "./header.php"; ?>
 
 <body>
   <main>
+    <!-- Filter Change Notification -->
+    <?php if (isset($_GET['range']) && $_GET['range'] !== 'all'): ?>
+      <div class="filter-notification" id="filterNotification">
+        <i class="fa-solid fa-filter"></i>
+        <span>Filter applied: <?php echo htmlspecialchars($rangeDisplayText); ?></span>
+        <button onclick="this.parentElement.style.display='none'" aria-label="Close notification">×</button>
+      </div>
+    <?php endif; ?>
+    
+    <!-- Debug Panel (shows when debug=1 is in URL) -->
+    <?php if (isset($_GET['debug'])): ?>
+      <div style="background: #333; color: #fff; padding: 1rem; margin: 1rem; border-radius: 8px; font-family: monospace; font-size: 12px;">
+        <h3 style="margin: 0 0 0.5rem 0; color: #07c297;">🐛 Debug Information</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          <div>
+            <strong>URL Parameters:</strong><br>
+            Range: <?php echo htmlspecialchars($timeRange); ?><br>
+            KPI Filter: <?php echo htmlspecialchars($kpiFilter ?: 'none'); ?><br>
+            Quick Filter: <?php echo htmlspecialchars($quickFilter ?: 'none'); ?>
+          </div>
+          <div>
+            <strong>SQL Conditions:</strong><br>
+            Current: <?php echo htmlspecialchars($currentCondition ?: 'none'); ?><br>
+            Previous: <?php echo htmlspecialchars($previousCondition ?: 'none'); ?>
+          </div>
+          <div>
+            <strong>Data Counts:</strong><br>
+            Total: <?php echo $totalRecords; ?><br>
+            Encountered: <?php echo $encounterYesCount; ?><br>
+            Vaccinated: <?php echo $vaccinatedYesCount; ?>
+          </div>
+          <div>
+            <strong>Time Range:</strong><br>
+            Display: <?php echo htmlspecialchars($rangeDisplayText); ?><br>
+            Comparison: <?php echo htmlspecialchars($comparisonText); ?>
+          </div>
+        </div>
+        <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #555;">
+          <strong>Quick Test Links:</strong>
+          <a href="?range=today&debug=1" style="color: #07c297; margin: 0 10px;">Today</a>
+          <a href="?range=7days&debug=1" style="color: #07c297; margin: 0 10px;">7 Days</a>
+          <a href="?range=30days&debug=1" style="color: #07c297; margin: 0 10px;">30 Days</a>
+          <a href="?range=all&debug=1" style="color: #07c297; margin: 0 10px;">All</a>
+          <a href="test_time_filters.php" style="color: #ff6b6b; margin: 0 10px;">Check Data</a>
+        </div>
+      </div>
+    <?php endif; ?>
+    
     <div class="wrapper">
       <!-- Primary Action Section with Data Freshness -->
       <div class="primary-action-section">
@@ -389,6 +449,9 @@ $trends = [
           <div class="active-range-indicator">
             <i class="fa-solid fa-calendar-alt"></i>
             <span>Showing data for: <strong><?php echo htmlspecialchars($rangeDisplayText); ?></strong></span>
+            <?php if ($timeRange !== 'all'): ?>
+              <span class="filter-badge">Filtered</span>
+            <?php endif; ?>
           </div>
           <div class="data-freshness-indicator">
             <i class="fa-solid fa-clock"></i>
@@ -399,19 +462,19 @@ $trends = [
           <div class="time-range-filter">
             <div class="filter-label">Time Range:</div>
             <div class="filter-buttons">
-              <a href="?range=today<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?>" class="filter-btn <?php echo $timeRange === 'today' ? 'active' : ''; ?>" data-range="today">
+              <a href="?range=today<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?><?php echo $quickFilter ? '&quick=' . $quickFilter : ''; ?>" class="filter-btn <?php echo $timeRange === 'today' ? 'active' : ''; ?>" data-range="today">
                 <i class="fa-solid fa-calendar-day"></i>
                 Today
               </a>
-              <a href="?range=7days<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?>" class="filter-btn <?php echo $timeRange === '7days' ? 'active' : ''; ?>" data-range="7days">
+              <a href="?range=7days<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?><?php echo $quickFilter ? '&quick=' . $quickFilter : ''; ?>" class="filter-btn <?php echo $timeRange === '7days' ? 'active' : ''; ?>" data-range="7days">
                 <i class="fa-solid fa-calendar-week"></i>
                 7 Days
               </a>
-              <a href="?range=30days<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?>" class="filter-btn <?php echo $timeRange === '30days' ? 'active' : ''; ?>" data-range="30days">
+              <a href="?range=30days<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?><?php echo $quickFilter ? '&quick=' . $quickFilter : ''; ?>" class="filter-btn <?php echo $timeRange === '30days' ? 'active' : ''; ?>" data-range="30days">
                 <i class="fa-solid fa-calendar-alt"></i>
                 30 Days
               </a>
-              <a href="?range=all<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?>" class="filter-btn <?php echo $timeRange === 'all' ? 'active' : ''; ?>" data-range="all">
+              <a href="?range=all<?php echo $kpiFilter ? '&filter=' . $kpiFilter : ''; ?><?php echo $quickFilter ? '&quick=' . $quickFilter : ''; ?>" class="filter-btn <?php echo $timeRange === 'all' ? 'active' : ''; ?>" data-range="all">
                 <i class="fa-solid fa-infinity"></i>
                 All Time
               </a>
@@ -912,8 +975,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Add loading for other navigation elements
-  const actionLinks = document.querySelectorAll('.action-btn[href], .clear-filters-btn');
+  // Add loading for other navigation elements (excluding filter buttons)
+  const actionLinks = document.querySelectorAll('.action-btn[href]:not(.filter-btn), .clear-filters-btn');
   actionLinks.forEach(link => {
     link.addEventListener('click', function() {
       if (loadingOverlay) {
@@ -931,6 +994,51 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     }
+  });
+
+  // Add specific event handlers for time range filter buttons
+  const timeRangeButtons = document.querySelectorAll('.time-range-filter .filter-btn');
+  console.log('Found', timeRangeButtons.length, 'time range filter buttons');
+  
+  timeRangeButtons.forEach((button, index) => {
+    console.log('Setting up button', index, ':', button.href, 'classes:', button.className);
+    
+    // Remove any existing event listeners that might conflict
+    button.addEventListener('click', function(e) {
+      console.log('Time range button clicked:', this.href);
+      console.log('Event target:', e.target, 'Current target:', e.currentTarget);
+      
+      // Don't prevent default - we want the link to work
+      // Just add visual feedback
+      
+      // Add loading state for time range filters
+      if (loadingOverlay) {
+        loadingOverlay.classList.add('active');
+        loadingOverlay.setAttribute('aria-hidden', 'false');
+        console.log('Loading overlay activated');
+      }
+      
+      // Add visual feedback
+      this.style.opacity = '0.7';
+      this.style.pointerEvents = 'none';
+      
+      // Announce to screen readers
+      const rangeText = this.textContent.trim();
+      announceToScreenReader(`Filtering by ${rangeText}. Loading...`);
+      console.log('Navigating to:', this.href);
+      
+      // Let the browser handle the navigation naturally
+    }, false); // Use capturing phase to avoid conflicts
+
+    // Add keyboard support for time range filter buttons
+    button.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        console.log('Keyboard activation for button:', this.href);
+        // Trigger the click event
+        this.click();
+      }
+    });
   });
   
   // Enhanced delete confirmation with accessibility
@@ -1016,6 +1124,17 @@ document.addEventListener('DOMContentLoaded', function() {
   // Check on load and resize
   checkTableScroll();
   window.addEventListener('resize', checkTableScroll);
+  
+  // Auto-hide filter notification
+  const filterNotification = document.getElementById('filterNotification');
+  if (filterNotification) {
+    setTimeout(() => {
+      filterNotification.style.animation = 'slideOutToRight 0.3s ease-in forwards';
+      setTimeout(() => {
+        filterNotification.style.display = 'none';
+      }, 300);
+    }, 3000); // Hide after 3 seconds
+  }
   
   // Focus management for better keyboard navigation
   window.addEventListener('focus', function(e) {
