@@ -433,7 +433,6 @@ if (isset($_GET['debug'])) {
           <a href="?range=7days&debug=1" style="color: #07c297; margin: 0 10px;">7 Days</a>
           <a href="?range=30days&debug=1" style="color: #07c297; margin: 0 10px;">30 Days</a>
           <a href="?range=all&debug=1" style="color: #07c297; margin: 0 10px;">All</a>
-          <a href="test_time_filters.php" style="color: #ff6b6b; margin: 0 10px;">Check Data</a>
         </div>
       </div>
     <?php endif; ?>

@@ -12,7 +12,7 @@
   backdrop-filter: blur(10px);
   border: 1px solid var(--clr-border);
   border-radius: var(--border-radius);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   position: relative;
   overflow: hidden;
 }
@@ -142,7 +142,7 @@
   gap: 0.75rem;
   padding: 1rem 1.5rem;
   border-radius: var(--border-radius);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   font-weight: 500;
   transition: all 0.3s ease;
 }
@@ -239,7 +239,7 @@
 }
 
 .section-header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .section-title {
@@ -266,7 +266,7 @@
 
 /* Setting Groups and Items */
 .setting-group {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .setting-item {
@@ -472,8 +472,8 @@
 
 /* Form Actions */
 .form-actions {
-  margin-top: 2rem;
-  padding-top: 2rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
   border-top: 1px solid var(--clr-border-light);
   display: flex;
   justify-content: flex-end;
@@ -481,8 +481,8 @@
 
 /* Security Actions */
 .security-actions {
-  margin-top: 3rem;
-  padding-top: 2rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
   border-top: 1px solid var(--clr-border-light);
 }
 
@@ -623,11 +623,11 @@
 }
 
 .data-actions {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 }
 
 .action-group {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .export-card {
@@ -650,7 +650,7 @@
 
 /* Danger Zone */
 .danger-zone {
-  margin-top: 3rem;
+  margin-top: 2rem;
   padding: 2rem;
   background: rgba(239, 68, 68, 0.05);
   border: 2px solid rgba(239, 68, 68, 0.2);
@@ -669,7 +669,7 @@
 
 .danger-description {
   color: rgba(239, 68, 68, 0.8);
-  margin: 0 0 2rem 0;
+  margin: 0 0 1.5rem 0;
   font-size: 0.9rem;
 }
 

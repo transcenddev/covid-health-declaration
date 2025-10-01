@@ -12,9 +12,9 @@
 
 2. **Check if you have varied date data:**
 
-   - Visit: `http://localhost:8000/test_time_filters.php`
+   - Visit the main dashboard and check different time range filters
    - Should show records distributed across different dates
-   - If all dates are the same: Run `http://localhost:8000/add_test_data.php`
+   - If all dates are the same: Add test data manually through the "Add Record" form with different dates
 
 3. **Check browser console for JavaScript errors:**
 
@@ -32,7 +32,7 @@
 ### Issue: "All time ranges show same count"
 
 **Cause:** All records have same created_at date
-**Solution:** Add test data with `add_test_data.php`
+**Solution:** Add test data manually through the "Add Record" form with different dates
 
 ### Issue: "Filter buttons don't change URL"
 

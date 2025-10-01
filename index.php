@@ -40,13 +40,13 @@
    <?php endif; ?>
  </div>
 
- <footer class="main-footer">
+ <!-- <footer class="main-footer">
    <div class="container">
      <div class="footer-bottom">
        <p>&copy; 2025 Health Declaration System</p>
      </div>
    </div>
- </footer>
+ </footer> -->
  </body>
 
  </html>
